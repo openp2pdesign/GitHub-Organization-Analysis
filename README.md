@@ -4,7 +4,7 @@ GitHub Organization Analysis
 Simple python scripts for analyzing a GitHub organization
 
 
-** Usage:
+** Usage: **
 
 For general statistics visualization:
 *python organization_stats.py*

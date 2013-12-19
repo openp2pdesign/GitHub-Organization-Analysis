@@ -1,10 +1,10 @@
 from github import Github
-import networkx as nx
 
 issue = {}
 issue = {0:{"author":"none", "comments":{}}}
 commits = {0:{"commit","sha"}}
 repos = {}
+users = {}
 
 def analyse_repo(repository,graph):  
     print "-----"

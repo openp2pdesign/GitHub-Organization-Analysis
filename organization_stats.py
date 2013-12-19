@@ -28,7 +28,7 @@ repos = {}
 
 
 if __name__ == "__main__":
-    print "Social Network Analisys of your GitHub Organization"
+    print "Simple statistics of your GitHub Organization"
     print ""
     userlogin = raw_input("Login: Enter your username: ")
     password = getpass.getpass("Login: Enter yor password: ")
