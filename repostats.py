@@ -6,36 +6,65 @@ commits = {0:{"commit","sha"}}
 repos = {}
 users = {}
 
-def analyse_repo(repository,graph):  
+def analyse_repo(repository):  
     print "-----"
     print "DESCRIPTION:",repository.description
     print "-----"
     print "OWNER:",repository.owner.login
-    graph.add_node(str(unicode(repository.owner.login)),owner="Yes")
+    print str(unicode(repository.owner.login)), "owner=yes"
     print "-----"
     print "WATCHERS:",repository.watchers
     print ""
     for i in repository.get_stargazers():
         if i != None:
             print "-",i.login
-            if i.login not in graph:
-                graph.add_node(str(unicode(i.login)),watcher="Yes")
+            if i.login not in users:
+                users[i.login] = {}
+                users[i.login]["watcher"]="Yes"
+                print str(unicode(i.login)) , "watcher=Yes"
             else:
-                graph.node[i.login]["watcher"]="Yes"
+                users[i.login]["watcher"]="Yes" 
+                print users[i.login]["watcher"], "Yes"
         else:
-            graph.node["None"]["watcher"]="Yes"
+            users["None"]["watcher"]="Yes" 
     print "-----"
     print "COLLABORATORS"
     print ""
     for i in repository.get_collaborators():
         if i != None:
             print "-",i.login
-            if i.login not in graph:
-                graph.add_node(str(unicode(i.login)),collaborator="Yes")
+            if i.login not in users:
+                users[i.login] = {}
+                users[i.login]["collaborator"]="Yes"
             else:
-                graph.node[i.login]["collaborator"]="Yes"
+                users[i.login]["collaborator"]="Yes"
         else:
-            graph.node["None"]["collaborator"]="Yes"
+            users["None"]["collaborator"]="Yes"
+    print "-----"
+    print "CONTRIBUTORS"
+    print ""
+    for i in repository.get_contributors():
+        if i.login != None:
+            print "-", i.login
+            if i.login not in users:
+                    users[i.login] = {}
+                    users[i.login]["contributor"]="Yes"
+            else:
+                users[i.login]["contributor"]="Yes"
+        else:
+            users["None"]["contributor"]="Yes"
+            
+    # Check the attributes of every node, and add a "No" when it is not present
+    for i in users:
+        if "owner" not in users[i]:
+            users[i]["owner"] = "No"
+        if "contributor" not in users[i]:
+            users[i]["contributor"] = "No"               
+        if "collaborator" not in users[i]:
+            users[i]["collaborator"] = "No"
+        if "watcher" not in users[i]:
+            users[i]["watcher"] = "No"
+    
     print "-----"
     print "HAS ISSUES=",repository.has_issues
     if repository.has_issues == True:
@@ -49,26 +78,27 @@ def analyse_repo(repository,graph):
                 issue[i.number]= {}
                 issue[i.number]["comments"]= {}
                 issue[i.number]["author"] = i.user.login
+                issue[i.number]["created_at"] = i.created_at
+                issue[i.number]["closed_at"] = i.closed_at
             else:
                 print "- Created by None"
                 issue[i.number]= {}
                 issue[i.number]["comments"]= {}
                 issue[i.number]["author"] = "None"
-            print "--",i.title
-            if i.assignee != None:
-                print "-- Assigned to",i.assignee.login
-                graph.add_edge(str(i.user.login),str(i.assignee.login))
-            else:
-                print "-- Assigned to None"
-                graph.add_edge(str(i.user.login),"None")
+                issue[i.number]["created_at"] = i.created_at
+                issue[i.number]["closed_at"] = i.closed_at
             print "--",i.comments,"comments"
             for j,f in enumerate(i.get_comments()):
                 if f.user != None:
                     print "--- With a comment by",f.user.login
                     issue[i.number]["comments"][j] = f.user.login
+                    issue[i.number]["created_at"] = f.created_at
+                    issue[i.number]["updated_at"] = f.updated_at
                 else:
                     print "--- With a comment by None"
                     issue[i.number]["comments"][j] = "None"
+                    issue[i.number]["created_at"] = f.created_at
+                    issue[i.number]["updated_at"] = f.updated_at
             print ""      
 
         print "ISSUES: Closed ones"
@@ -80,40 +110,30 @@ def analyse_repo(repository,graph):
                 issue[i.number]= {}
                 issue[i.number]["comments"]= {}
                 issue[i.number]["author"] = i.user.login
+                issue[i.number]["created_at"] = i.created_at
+                issue[i.number]["closed_at"] = i.closed_at
             else:
                 print "- Created by None"
                 issue[i.number]= {}
                 issue[i.number]["comments"]= {}
                 issue[i.number]["author"] = "None"
-            print "--",i.title
-            if i.assignee != None:
-                print "-- Assigned to",i.assignee.login
-                graph.add_edge(str(i.user.login),str(i.assignee.login))
-            else:
-                print "-- Assigned to None"
-                graph.add_edge(str(i.user.login),"None")
+                issue[i.number]["created_at"] = i.created_at
+                issue[i.number]["closed_at"] = i.closed_at
             print "--",i.comments,"comments"
             for j,f in enumerate(i.get_comments()):
                 if f.user != None:
                     print "--- With a comment by",f.user.login
                     issue[i.number]["comments"][j] = f.user.login
+                    issue[i.number]["created_at"] = f.created_at
+                    issue[i.number]["updated_at"] = f.updated_at
                 else:
                     print "--- With a comment by None"
                     issue[i.number]["comments"][j] = "None"
+                    issue[i.number]["created_at"] = f.created_at
+                    issue[i.number]["updated_at"] = f.updated_at
             print ""      
               
-    print "-----"
-    print "CONTRIBUTORS"
-    print ""
-    for i in repository.get_contributors():
-        if i.login != None:
-            print "-", i.login
-            if i.login not in graph:
-                    graph.add_node(str(unicode(i.login)),contributor="Yes")
-            else:
-                graph.node[i.login]["contributor"]="Yes"
-        else:
-            graph.node["None"]["contributor"]="Yes"
+    
     print "-----"
     print "COMMITS"
     print ""
@@ -129,16 +149,7 @@ def analyse_repo(repository,graph):
             repos[0][k]="None"
     print "-----"
        
-    # Check the attributes of every node, and add a "No" when it is not present, in order to let Gephi use the attribute for graph partitioning
-    for i in graph.nodes():
-        if "owner" not in graph.node[i]:
-            graph.node[i]["owner"] = "No"
-        if "contributor" not in graph.node[i]:
-            graph.node[i]["contributor"] = "No"               
-        if "collaborator" not in graph.node[i]:
-            graph.node[i]["collaborator"] = "No"
-        if "watcher" not in graph.node[i]:
-            graph.node[i]["watcher"] = "No"
+    
             
             
     # Add an edge from a commiter to a previous one,

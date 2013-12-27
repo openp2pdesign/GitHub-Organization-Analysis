@@ -24,7 +24,7 @@ issue = {}
 issue = {0:{"author":"none", "comments":{}}}
 commits = {0:{"commit","sha"}}
 repos = {}
-
+users = {}
 
 
 if __name__ == "__main__":
