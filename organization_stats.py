@@ -119,6 +119,17 @@ if __name__ == "__main__":
         events[j.actor.login][j.id]["type"] = j.type
         events[j.actor.login][j.id]["repo"] = j.repo.name
     
+    # Debug
     print events
     
-    print "Done. Saved as "+username+"_allrepositories_social_interactions_analysis.gexf"
+    # Separate activities by repository
+    # Push, Issue, IssueComment, CommitComment, Fork, Pull
+    
+    # Separate activities by person
+    # Push, Issue, IssueComment, CommitComment, Fork, Pull
+    
+    # All activity through time, by person
+    
+    # All activity trough time, all persons
+    
+    print "Done."
