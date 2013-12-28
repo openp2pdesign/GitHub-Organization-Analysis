@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # General statistics of an Organization repository in GitHub
 #
@@ -16,16 +17,8 @@
 from github import Github
 import getpass
 
-from repostats import analyse_repo
-
-# Variables for the whole program
-
-issue = {}
-issue = {0:{"author":"none", "comments":{}}}
-commits = {0:{"commit","sha"}}
-repos = {}
 users = {}
-
+events = {}
 
 if __name__ == "__main__":
     print "Simple statistics of your GitHub Organization"
@@ -54,12 +47,19 @@ if __name__ == "__main__":
     for repo in org.get_repos():
         print "-",repo.name
     
-    print ""
+    print ""    
+        
+    # Get all events in the organization
+    # Description: http://developer.github.com/v3/activity/events/types/
+    for j in org.get_events():
+        print "-- ",j.type,"event by",j.actor.login,"from repo:",j.repo.name
+        if j.actor.login not in events:
+            events[j.actor.login] = {}        
+        events[j.actor.login][j.id] = {}
+        events[j.actor.login][j.id]["time"] = j.created_at
+        events[j.actor.login][j.id]["type"] = j.type
+        events[j.actor.login][j.id]["repo"] = j.repo.name
     
-    for repo in org.get_repos():
-        print "---------"
-        print "NOW ANALYSING:", repo.name
-        b = org.get_repo(repo.name)        
-        analyse_repo(b,org)
+    print events
     
     print "Done. Saved as "+username+"_allrepositories_social_interactions_analysis.gexf"
