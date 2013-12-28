@@ -7,15 +7,47 @@ issue = {0:{"author":"none", "comments":{}}}
 commits = {0:{"commit","sha"}}
 repos = {}
 users = {}
+events = {}
 
 def analyse_repo(repository,organization):  
     
+    # Get all events in the organization
+    # Description: http://developer.github.com/v3/activity/events/types/
     for j in organization.get_events():
         print "-- event by",j.actor.login
-        print j.actor.login.get_events()
-        print j.created_at
-        print j.type
+        print "REPO",j.repo.name
+        if j.actor.login not in events:
+            events[j.actor.login] = {}        
+        events[j.actor.login][j.id] = {}
+        events[j.actor.login][j.id]["time"] = j.created_at
+        events[j.actor.login][j.id]["type"] = j.type
+        events[j.actor.login][j.id]["repo"] = j.repo.name
+        
+        if j.type == "IssuesEvent":
+            pass
+        elif j.type == "CommitCommentEvent":
+            pass
+        elif j.type == "PushEvent":
+            pass
+        elif j.type == "DeleteEvent":
+            pass
+        elif j.type == "CreateEvent":
+            pass
+        elif j.type == "IssueCommentEvent":
+            pass
+        elif j.type == "":
+            pass
+        elif j.type == "":
+            pass
+        elif j.type == "":
+            pass
+        elif j.type == "":
+            pass
+        elif j.type == "":
+            pass
     
+    print "EVENTS:"
+    print events
     
     print "-----"
     print "DESCRIPTION:",repository.description
