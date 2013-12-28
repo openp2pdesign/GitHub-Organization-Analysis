@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from github import Github
 
 issue = {}
@@ -12,6 +14,8 @@ def analyse_repo(repository):
     print "-----"
     print "OWNER:",repository.owner.login
     print str(unicode(repository.owner.login)), "owner=yes"
+    
+    # Add users --------------------------------------------------------------------------
     print "-----"
     print "WATCHERS:",repository.watchers
     print ""
@@ -21,10 +25,8 @@ def analyse_repo(repository):
             if i.login not in users:
                 users[i.login] = {}
                 users[i.login]["watcher"]="Yes"
-                print str(unicode(i.login)) , "watcher=Yes"
             else:
                 users[i.login]["watcher"]="Yes" 
-                print users[i.login]["watcher"], "Yes"
         else:
             users["None"]["watcher"]="Yes" 
     print "-----"
@@ -65,6 +67,10 @@ def analyse_repo(repository):
         if "watcher" not in users[i]:
             users[i]["watcher"] = "No"
     
+    print "Users:"
+    print users
+    
+    # Add users' activities --------------------------------------------------------------------------    
     print "-----"
     print "HAS ISSUES=",repository.has_issues
     if repository.has_issues == True:
