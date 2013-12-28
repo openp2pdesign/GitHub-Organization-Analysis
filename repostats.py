@@ -8,7 +8,15 @@ commits = {0:{"commit","sha"}}
 repos = {}
 users = {}
 
-def analyse_repo(repository):  
+def analyse_repo(repository,organization):  
+    
+    for j in organization.get_events():
+        print "-- event by",j.actor.login
+        print j.actor.login.get_events()
+        print j.created_at
+        print j.type
+    
+    
     print "-----"
     print "DESCRIPTION:",repository.description
     print "-----"
@@ -67,8 +75,15 @@ def analyse_repo(repository):
         if "watcher" not in users[i]:
             users[i]["watcher"] = "No"
     
-    print "Users:"
-    print users
+    # Add empty dictionaries for users' activities
+    for i in users:
+        users[i]["issues"] = {}
+        users[i]["comments"] = {}
+        users[i]["commits"] = {}
+        
+    for i in users:
+        print i
+        print i.get_events()
     
     # Add users' activities --------------------------------------------------------------------------    
     print "-----"
@@ -81,30 +96,20 @@ def analyse_repo(repository):
             print "Issue number:",i.number
             if i.user != None:
                 print "- Created by", i.user.login
-                issue[i.number]= {}
-                issue[i.number]["comments"]= {}
-                issue[i.number]["author"] = i.user.login
-                issue[i.number]["created_at"] = i.created_at
-                issue[i.number]["closed_at"] = i.closed_at
+                users[i.user.login]["issues"][i.number]= {}
+                users[i.user.login]["issues"]["created_at"]= i.created_at
             else:
                 print "- Created by None"
-                issue[i.number]= {}
-                issue[i.number]["comments"]= {}
-                issue[i.number]["author"] = "None"
-                issue[i.number]["created_at"] = i.created_at
-                issue[i.number]["closed_at"] = i.closed_at
+                users["None"]["issues"][i.number]= {}
+                users["None"]["issues"]["created_at"]= i.created_at
             print "--",i.comments,"comments"
             for j,f in enumerate(i.get_comments()):
                 if f.user != None:
-                    print "--- With a comment by",f.user.login
-                    issue[i.number]["comments"][j] = f.user.login
-                    issue[i.number]["created_at"] = f.created_at
-                    issue[i.number]["updated_at"] = f.updated_at
+                    print "--- With a comment by",f.user.login                    
+                    users[f.user.login]["comments"][j]["created_at"]= f.created_at           
                 else:
                     print "--- With a comment by None"
-                    issue[i.number]["comments"][j] = "None"
-                    issue[i.number]["created_at"] = f.created_at
-                    issue[i.number]["updated_at"] = f.updated_at
+                    users["None"]["comments"][j]["created_at"]= f.created_at
             print ""      
 
         print "ISSUES: Closed ones"
@@ -113,30 +118,21 @@ def analyse_repo(repository):
             print "Issue number:",i.number
             if i.user != None:
                 print "- Created by", i.user.login
-                issue[i.number]= {}
-                issue[i.number]["comments"]= {}
-                issue[i.number]["author"] = i.user.login
-                issue[i.number]["created_at"] = i.created_at
-                issue[i.number]["closed_at"] = i.closed_at
+                users[i.user.login]["issues"][i.number]= {}
+                users[i.user.login]["issues"]["created_at"]= i.created_at
             else:
                 print "- Created by None"
-                issue[i.number]= {}
-                issue[i.number]["comments"]= {}
-                issue[i.number]["author"] = "None"
-                issue[i.number]["created_at"] = i.created_at
-                issue[i.number]["closed_at"] = i.closed_at
+                users["None"]["issues"][i.number]= {}
+                users["None"]["issues"]["created_at"]= i.created_at
+
             print "--",i.comments,"comments"
             for j,f in enumerate(i.get_comments()):
                 if f.user != None:
                     print "--- With a comment by",f.user.login
-                    issue[i.number]["comments"][j] = f.user.login
-                    issue[i.number]["created_at"] = f.created_at
-                    issue[i.number]["updated_at"] = f.updated_at
+                    users[f.user.login]["comments"][j]["created_at"]= f.created_at 
                 else:
                     print "--- With a comment by None"
-                    issue[i.number]["comments"][j] = "None"
-                    issue[i.number]["created_at"] = f.created_at
-                    issue[i.number]["updated_at"] = f.updated_at
+                    users["None"]["comments"][j]["created_at"]= f.created_at 
             print ""      
               
     
@@ -144,32 +140,20 @@ def analyse_repo(repository):
     print "COMMITS"
     print ""
     
-    repos[0]={0:""}
     for k,i in enumerate(repository.get_commits()):
         print "-",i.sha
         if i.committer != None:
             print "-- by",i.committer.login
-            repos[0][k]=i.committer.login
+            print "STATUS:", i.get_statuses() 
+            for b in i.get_statuses():
+                print "L:",b
+                print "date:", b.created_at
+            #users[i.committer.login]["commits"][j]["created_at"]= i.author["date"] 
         else:
             print "-- by None"
-            repos[0][k]="None"
     print "-----"
        
-    
-            
-            
-    # Add an edge from a commiter to a previous one,
-    # i.e. if you are committing after somebody has commited,
-    # you are interacting with him/her
-    print "ADDING EDGES FROM COMMITS"
-    print ""
-    for h in repos[0]:
-        if h < len(repos[0])-1:
-            print "-"
-            print "Committer:",repos[0][h]
-            print "Adding an edge from:",repos[0][h],"to previous committer:",repos[0][h+1]
-            graph.add_edge(str(repos[0][h]),str(repos[0][h+1]))
-    
+      
     # Creating the edges from the commits and their comments.
     # Each comment interacts with the previous ones,
     # so each user interacts with the previous ones that have been creating the issue or commented it

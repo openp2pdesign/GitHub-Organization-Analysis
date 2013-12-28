@@ -59,7 +59,7 @@ if __name__ == "__main__":
     for repo in org.get_repos():
         print "---------"
         print "NOW ANALYSING:", repo.name
-        b = org.get_repo(repo.name)
-        analyse_repo(b)
+        b = org.get_repo(repo.name)        
+        analyse_repo(b,org)
     
     print "Done. Saved as "+username+"_allrepositories_social_interactions_analysis.gexf"
