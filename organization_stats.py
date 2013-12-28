@@ -17,6 +17,11 @@
 from github import Github
 import getpass
 
+import datetime
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+
 users = {}
 events = {}
 
@@ -49,8 +54,8 @@ if __name__ == "__main__":
     
     print ""    
     
-    # Get all users in the organization by each repository
-    # Get all the roles for each user
+    # Get all users in the organization by each repository
+    # Get all the roles for each user
     for repo in org.get_repos():
         print "---------"
         print "NOW ANALYSING:", repo.name
@@ -108,7 +113,7 @@ if __name__ == "__main__":
                 users[i]["watcher"] = "No"
 
         
-    # Get all events in the organization
+    # Get all events in the organization
     # Description: http://developer.github.com/v3/activity/events/types/
     for j in org.get_events():
         print "-- ",j.type,"event by",j.actor.login,"from repo:",j.repo.name
@@ -119,16 +124,40 @@ if __name__ == "__main__":
         events[j.actor.login][j.id]["type"] = j.type
         events[j.actor.login][j.id]["repo"] = j.repo.name
     
-    # Debug
+    # Debug
     print events
     
-    # Separate activities by repository
-    # Push, Issue, IssueComment, CommitComment, Fork, Pull
+    # Separate activities by repository
+    # Push, Issue, IssueComment, CommitComment, Fork, Pull
     
-    # Separate activities by person
-    # Push, Issue, IssueComment, CommitComment, Fork, Pull
+    # Separate activities by person
+    # Push, Issue, IssueComment, CommitComment, Fork, Pull
     
-    # All activity through time, by person
+    # All activity through time, by person
+    
+    fig, ax = plt.subplots()
+    ax.plot(r.date, r.adj_close)
+    
+    # format the ticks
+    ax.xaxis.set_major_locator(years)
+    ax.xaxis.set_major_formatter(yearsFmt)
+    ax.xaxis.set_minor_locator(months)
+    
+    datemin = datetime.date(r.date.min().year, 1, 1)
+    datemax = datetime.date(r.date.max().year+1, 1, 1)
+    ax.set_xlim(datemin, datemax)
+    
+    # format the coords message box
+    def price(x): return '$%1.2f'%x
+    ax.format_xdata = mdates.DateFormatter('%Y-%m-%d')
+    ax.format_ydata = price
+    ax.grid(True)
+    
+    # rotates and right aligns the x labels, and moves the bottom of the
+    # axes up to make room for them
+    fig.autofmt_xdate()
+    
+    plt.show()
     
     # All activity trough time, all persons
     
