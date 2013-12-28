@@ -48,6 +48,65 @@ if __name__ == "__main__":
         print "-",repo.name
     
     print ""    
+    
+    # Get all users in the organization by each repository
+    # Get all the roles for each user
+    for repo in org.get_repos():
+        print "---------"
+        print "NOW ANALYSING:", repo.name
+        repository = org.get_repo(repo.name)
+
+        print "-----"
+        print "WATCHERS:",repository.watchers
+        print ""
+        for i in repository.get_stargazers():
+            if i != None:
+                print "-",i.login
+                if i.login not in users:
+                    users[i.login] = {}
+                    users[i.login]["watcher"]="Yes"
+                else:
+                    users[i.login]["watcher"]="Yes" 
+            else:
+                users["None"]["watcher"]="Yes" 
+        print "-----"
+        print "COLLABORATORS"
+        print ""
+        for i in repository.get_collaborators():
+            if i != None:
+                print "-",i.login
+                if i.login not in users:
+                    users[i.login] = {}
+                    users[i.login]["collaborator"]="Yes"
+                else:
+                    users[i.login]["collaborator"]="Yes"
+            else:
+                users["None"]["collaborator"]="Yes"
+        print "-----"
+        print "CONTRIBUTORS"
+        print ""
+        for i in repository.get_contributors():
+            if i.login != None:
+                print "-", i.login
+                if i.login not in users:
+                        users[i.login] = {}
+                        users[i.login]["contributor"]="Yes"
+                else:
+                    users[i.login]["contributor"]="Yes"
+            else:
+                users["None"]["contributor"]="Yes"
+                
+        # Check the attributes of every node, and add a "No" when it is not present
+        for i in users:
+            if "owner" not in users[i]:
+                users[i]["owner"] = "No"
+            if "contributor" not in users[i]:
+                users[i]["contributor"] = "No"               
+            if "collaborator" not in users[i]:
+                users[i]["collaborator"] = "No"
+            if "watcher" not in users[i]:
+                users[i]["watcher"] = "No"
+
         
     # Get all events in the organization
     # Description: http://developer.github.com/v3/activity/events/types/
