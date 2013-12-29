@@ -52,8 +52,9 @@ if __name__ == "__main__":
     org = g.get_organization(org_to_mine)
     
     # Create a directory with the name of the organization for saving analysis
-    if not os.path.exists(org_to_mine+"-stats"):
-        os.makedirs(org_to_mine+"-stats")
+    directory = org_to_mine+"-stats"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     
     print org.login,"has",org.public_repos, "repositories."
     
@@ -144,51 +145,50 @@ if __name__ == "__main__":
     # Push, Issue, IssueComment, CommitComment, Fork, Pull
     
     # All activity through time, by person
-    
-    # Define data
-    x = [1,2,3,4]
-    y = [20, 21, 20.5, 20.8]
-    
-    print events["openp2pdesign"]
-    print "TOTAL ACTIVITY:", len(events["openp2pdesign"])
-    days = {}
-    for j in events["openp2pdesign"]:
-        print j
-        print "TIME:",events["openp2pdesign"][j]["time"]
-        print "DAY:",events["openp2pdesign"][j]["time"].day
-        print "MONTH:",events["openp2pdesign"][j]["time"].month
-        print "YEAR:",events["openp2pdesign"][j]["time"].year
-        print "TYPE:",events["openp2pdesign"][j]["type"]
+    for singleuser in events:
+        print events[singleuser]
+        print "TOTAL ACTIVITY:", len(events[singleuser])
+        days = {}
+        for j in events[singleuser]:
+            print j
+            print "TIME:",events[singleuser][j]["time"]
+            print "DAY:",events[singleuser][j]["time"].day
+            print "MONTH:",events[singleuser][j]["time"].month
+            print "YEAR:",events[singleuser][j]["time"].year
+            print "TYPE:",events[singleuser][j]["type"]
+            
+            # Define activities per day
+            day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
+            if day not in days:
+                days[day] = {}
+                days[day]["activity"] = 0
+            days[day]["activity"] = days[day]["activity"] + 1
         
-        # Define activities per day
-        day = datetime.date(events["openp2pdesign"][j]["time"].year, events["openp2pdesign"][j]["time"].month, events["openp2pdesign"][j]["time"].day)
-        if day not in days:
-            days[day] = {}
-            days[day]["activity"] = 0
-        days[day]["activity"] = days[day]["activity"] + 1
-    
-    # Sort the dictionary
-    ordered = OrderedDict(sorted(days.items(), key=lambda t: t[0]))
-    
-    # Transform the dictionary in x,y lists for plotting
-    x = []
-    y = []
-    for k,l in enumerate(ordered):
-        x.append(l)
-        y.append(ordered[l]["activity"])
-        print "L:",l,"=", ordered[l]["activity"]
-    
-    # Plot data    
-    plt.plot_date(x, y, linestyle="dashed", marker="o", color="green")
-    plt.gcf().autofmt_xdate()
-    
-    # Set picture size
-    # fig = plt.gcf()
-    # fig.set_size_inches(20,10.5)
-    
-    # Save plot
-    plt.savefig('test2png.png',dpi=200)
-    plt.show()
+        # Sort the dictionary
+        ordered = OrderedDict(sorted(days.items(), key=lambda t: t[0]))
+        
+        # Transform the dictionary in x,y lists for plotting
+        x = []
+        y = []
+        for k,l in enumerate(ordered):
+            x.append(l)
+            y.append(ordered[l]["activity"])
+            print "L:",l,"=", ordered[l]["activity"]
+        
+        # Plot data    
+        plt.plot_date(x, y, linestyle="dashed", marker="o", color="green")
+        plt.gcf().autofmt_xdate()
+        plt.xlabel("Time")
+        plt.ylabel("Single activities")
+        plt.title("Activity by "+singleuser)
+        
+        # Set picture size
+        # fig = plt.gcf()
+        # fig.set_size_inches(20,10.5)
+        
+        # Save plot
+        plt.savefig(directory+"/"+singleuser+"-timeline.png",dpi=200)
+        plt.show()
     
     # All activity trough time, all persons
     
