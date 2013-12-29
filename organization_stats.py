@@ -22,6 +22,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import os
+import operator
 
 try:
     from collections import OrderedDict
@@ -145,6 +146,24 @@ if __name__ == "__main__":
     # Push, Issue, IssueComment, CommitComment, Fork, Pull
     
     # All activity through time, by person ...........................................................
+    
+    # Get the highest level of activities, for y scale
+    activities = []
+    for singleuser in events:
+        days = {}
+        for j in events[singleuser]:
+            # Define activities per day
+            day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
+            if day not in days:
+                days[day] = {}
+                days[day]["activity"] = 0
+            days[day]["activity"] = days[day]["activity"] + 1
+        print singleuser," - HIGHEST DAY ACTIVITY:", max(days.iteritems(), key=operator.itemgetter(1))[1]["activity"]
+        print singleuser," - WHEN:", max(days.iteritems(), key=operator.itemgetter(1))[0]
+        activities.append(max(days.iteritems(), key=operator.itemgetter(1))[1]["activity"]) 
+    max_activity = max(activities)
+    
+    # Calculate and draw and save a plot for each user
     for singleuser in events:
         print "--------------------"
         print "USER:",singleuser
@@ -189,6 +208,7 @@ if __name__ == "__main__":
         plt.ylabel("Single activities")
         plt.title("Activity by "+singleuser)
         plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
+        plt.ylim(0,max_activity)
         
         # Set picture size
         # fig = plt.gcf()
