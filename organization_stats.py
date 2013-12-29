@@ -22,6 +22,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    OrderedDict = dict
+
 users = {}
 events = {}
 
@@ -157,12 +162,16 @@ if __name__ == "__main__":
             days[day]["activity"] = 0
         days[day]["activity"] = days[day]["activity"] + 1
     
+    # Sort the dictionary
+    ordered = OrderedDict(sorted(days.items(), key=lambda t: t[0]))
+    
+    # Transform the dictionary in x,y lists for plotting
     x = []
     y = []
-    for k,l in enumerate(days):
+    for k,l in enumerate(ordered):
         x.append(l)
-        y.append(days[l]["activity"])
-        print "L:",l,"=", days[l]["activity"]
+        y.append(ordered[l]["activity"])
+        print "L:",l,"=", ordered[l]["activity"]
     
     # Plot data    
     plt.plot_date(x, y, linestyle="dashed", marker="o", color="green")
