@@ -138,13 +138,13 @@ if __name__ == "__main__":
     # Debug
     print events
     
-    # Separate activities by repository
+    # Separate activities by repository ..............................................................
     # Push, Issue, IssueComment, CommitComment, Fork, Pull
     
-    # Separate activities by person
+    # Separate activities by person ..................................................................
     # Push, Issue, IssueComment, CommitComment, Fork, Pull
     
-    # All activity through time, by person
+    # All activity through time, by person ...........................................................
     for singleuser in events:
         print "--------------------"
         print "USER:",singleuser
@@ -156,6 +156,7 @@ if __name__ == "__main__":
             print "MONTH:",events[singleuser][j]["time"].month
             print "YEAR:",events[singleuser][j]["time"].year
             print "TYPE:",events[singleuser][j]["type"]
+            print
             
             # Define activities per day
             day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
@@ -173,7 +174,6 @@ if __name__ == "__main__":
         for k,l in enumerate(ordered):
             x.append(l)
             y.append(ordered[l]["activity"])
-            print "L:",l,"=", ordered[l]["activity"]
         
         # Plot data    
 
@@ -188,6 +188,7 @@ if __name__ == "__main__":
         plt.xlabel("Time")
         plt.ylabel("Single activities")
         plt.title("Activity by "+singleuser)
+        plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
         
         # Set picture size
         # fig = plt.gcf()
@@ -198,6 +199,6 @@ if __name__ == "__main__":
         plt.savefig(directory+"/"+singleuser+"-timeline.pdf")
         plt.show()
     
-    # All activity trough time, all persons
+    # All activity trough time, all persons................................................
     
     print "Done."
