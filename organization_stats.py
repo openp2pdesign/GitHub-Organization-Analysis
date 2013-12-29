@@ -174,8 +174,9 @@ if __name__ == "__main__":
                 pass
             
     # Example from http://matplotlib.org/examples/api/barchart_demo.html
-    N = 5
-    menMeans = (20, 35, 30, 35, 27)
+    N = len(events)
+    allusers = events.keys()
+    menMeans = (20, 35, 30, 35, 27,20, 35, 30, 35, 27,12,12,12)
     
     ind = np.arange(N)  # the x locations for the groups
     width = 0.35       # the width of the bars
@@ -183,7 +184,7 @@ if __name__ == "__main__":
     fig, ax = plt.subplots()
     rects1 = ax.bar(ind, menMeans, width, color='r')
     
-    womenMeans = (25, 32, 34, 20, 25)
+    womenMeans = (25, 32, 34, 20, 25, 25, 32, 34, 20, 25, 12, 3,5)
     rects2 = ax.bar(ind+width, womenMeans, width, color='y')
     
     # add some
@@ -191,7 +192,8 @@ if __name__ == "__main__":
     ax.set_xlabel('Users')
     ax.set_title('Activity by user')
     ax.set_xticks(ind+width)
-    ax.set_xticklabels( ('G1', 'G2', 'G3', 'G4', 'G5') )
+    ax.set_xticklabels(allusers)
+    plt.gcf().autofmt_xdate()
     
     ax.legend( (rects1[0], rects2[0]), ('Men', 'Women') )
     
