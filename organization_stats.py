@@ -21,6 +21,7 @@ import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import os
 
 try:
     from collections import OrderedDict
@@ -49,6 +50,10 @@ if __name__ == "__main__":
     print ""
     
     org = g.get_organization(org_to_mine)
+    
+    # Create a directory with the name of the organization for saving analysis
+    if not os.path.exists(org_to_mine+"-stats"):
+        os.makedirs(org_to_mine+"-stats")
     
     print org.login,"has",org.public_repos, "repositories."
     
