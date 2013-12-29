@@ -149,8 +149,6 @@ if __name__ == "__main__":
     
     data = {}
     for singleuser in events:
-        print "--------------------"
-        print "USER:",singleuser
         data[singleuser] = {}
         data[singleuser]["push"] = 0
         data[singleuser]["issue"] = 0
@@ -160,8 +158,7 @@ if __name__ == "__main__":
         for j in events[singleuser]:
             # Count by event types
             # List of event types: http://developer.github.com/v3/activity/events/types/          
-            
-            print "TYPE:",events[singleuser][j]["type"]
+            # print "TYPE:",events[singleuser][j]["type"]
             tipo = events[singleuser][j]["type"]
             if tipo == "PushEvent":
                 data[singleuser]["push"] += 1
@@ -176,19 +173,37 @@ if __name__ == "__main__":
             else:
                 pass
             
+    # Example from http://matplotlib.org/examples/api/barchart_demo.html
+    N = 5
+    menMeans = (20, 35, 30, 35, 27)
     
-    # Transform the dictionary in x,y lists for plotting
-    x = []
-    y = []
+    ind = np.arange(N)  # the x locations for the groups
+    width = 0.35       # the width of the bars
     
-    # Plot a bar
-    plt.bar(x, y)
-     
-    # Configure plot
-    plt.gcf().autofmt_xdate()
-    plt.xlabel("Users")
-    plt.ylabel("Single activities")
-    plt.title("Activities for each user")
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(ind, menMeans, width, color='r')
+    
+    womenMeans = (25, 32, 34, 20, 25)
+    rects2 = ax.bar(ind+width, womenMeans, width, color='y')
+    
+    # add some
+    ax.set_ylabel('Activity')
+    ax.set_xlabel('Users')
+    ax.set_title('Activity by user')
+    ax.set_xticks(ind+width)
+    ax.set_xticklabels( ('G1', 'G2', 'G3', 'G4', 'G5') )
+    
+    ax.legend( (rects1[0], rects2[0]), ('Men', 'Women') )
+    
+    def autolabel(rects):
+        # attach some text labels
+        for rect in rects:
+            height = rect.get_height()
+            ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, '%d'%int(height),
+                    ha='center', va='bottom')
+    
+    autolabel(rects1)
+    autolabel(rects2)
     
     # Set picture size
     # fig = plt.gcf()
