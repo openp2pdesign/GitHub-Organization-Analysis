@@ -141,10 +141,24 @@ if __name__ == "__main__":
     
     print events["openp2pdesign"]
     print "TOTAL ACTIVITY:", len(events["openp2pdesign"])
+    days = {}
     for j in events["openp2pdesign"]:
         print j
         print "TIME:",events["openp2pdesign"][j]["time"]
+        print "DAY:",events["openp2pdesign"][j]["time"].day
+        print "MONTH:",events["openp2pdesign"][j]["time"].month
+        print "YEAR:",events["openp2pdesign"][j]["time"].year
         print "TYPE:",events["openp2pdesign"][j]["type"]
+        day = datetime.date(events["openp2pdesign"][j]["time"].year, events["openp2pdesign"][j]["time"].month, events["openp2pdesign"][j]["time"].day)
+        if day not in days:
+            days[day] = {}
+            days[day]["activity"] = 0
+        days[day]["activity"] = days[day]["activity"]+1
+        
+    for l in days:
+        print "L:",l,"=", days[l]["activity"]
+    
+    # Define activities per day
     
     # Plot data
     plt.plot(x, y)
