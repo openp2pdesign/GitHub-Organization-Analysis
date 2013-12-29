@@ -176,7 +176,13 @@ if __name__ == "__main__":
     # Plot data    
     plt.plot_date(x, y, linestyle="dashed", marker="o", color="green")
     plt.gcf().autofmt_xdate()
-    # Show plot
+    
+    # Set picture size
+    # fig = plt.gcf()
+    # fig.set_size_inches(20,10.5)
+    
+    # Save plot
+    plt.savefig('test2png.png',dpi=200)
     plt.show()
     
     # All activity trough time, all persons
