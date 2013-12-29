@@ -173,19 +173,33 @@ if __name__ == "__main__":
             else:
                 pass
             
+    # Transform the dictionary into lists of data
+    pushcount = []
+    issuecount = []
+    forkcount = []
+    commitcount = []
+    branchtagcount = []
+    for singleuser in events:
+        pushcount.append(data[singleuser]["push"])
+        issuecount.append(data[singleuser]["issue"])
+        forkcount.append(data[singleuser]["fork"])
+        commitcount.append(data[singleuser]["commit"])
+        branchtagcount.append(data[singleuser]["branchtag"])
+    
+    print "PUSH values:",pushcount
+    print "ISSUES values:",issuecount
+    print len(pushcount)
+    
     # Example from http://matplotlib.org/examples/api/barchart_demo.html
     N = len(events)
     allusers = events.keys()
-    menMeans = (20, 35, 30, 35, 27,20, 35, 30, 35, 27,12,12,12)
     
     ind = np.arange(N)  # the x locations for the groups
     width = 0.35       # the width of the bars
     
     fig, ax = plt.subplots()
-    rects1 = ax.bar(ind, menMeans, width, color='r')
-    
-    womenMeans = (25, 32, 34, 20, 25, 25, 32, 34, 20, 25, 12, 3,5)
-    rects2 = ax.bar(ind+width, womenMeans, width, color='y')
+    rects1 = ax.bar(ind, pushcount, width, color='r')
+    rects2 = ax.bar(ind+width, issuecount, width, color='y')
     
     # add some
     ax.set_ylabel('Activity')
@@ -195,7 +209,7 @@ if __name__ == "__main__":
     ax.set_xticklabels(allusers)
     plt.gcf().autofmt_xdate()
     
-    ax.legend( (rects1[0], rects2[0]), ('Men', 'Women') )
+    ax.legend( (rects1[0], rects2[0]), ('Push', 'Issues') )
     
     def autolabel(rects):
         # attach some text labels
