@@ -149,20 +149,24 @@ if __name__ == "__main__":
         print "MONTH:",events["openp2pdesign"][j]["time"].month
         print "YEAR:",events["openp2pdesign"][j]["time"].year
         print "TYPE:",events["openp2pdesign"][j]["type"]
+        
+        # Define activities per day
         day = datetime.date(events["openp2pdesign"][j]["time"].year, events["openp2pdesign"][j]["time"].month, events["openp2pdesign"][j]["time"].day)
         if day not in days:
             days[day] = {}
             days[day]["activity"] = 0
-        days[day]["activity"] = days[day]["activity"]+1
-        
-    for l in days:
+        days[day]["activity"] = days[day]["activity"] + 1
+    
+    x = []
+    y = []
+    for k,l in enumerate(days):
+        x.append(l)
+        y.append(days[l]["activity"])
         print "L:",l,"=", days[l]["activity"]
     
-    # Define activities per day
-    
-    # Plot data
-    plt.plot(x, y)
-    
+    # Plot data    
+    plt.plot_date(x, y, linestyle="dashed", marker="o", color="green")
+    plt.gcf().autofmt_xdate()
     # Show plot
     plt.show()
     
