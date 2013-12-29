@@ -163,13 +163,13 @@ if __name__ == "__main__":
             if tipo == "PushEvent":
                 data[singleuser]["push"] += 1
             elif tipo == "IssuesEvent" or tipo == "IssueCommentEvent":
-                data[singleuser]["issue"] = 0
+                data[singleuser]["issue"] += 1
             elif tipo == "ForkEvent" or tipo == "PullRequestEvent" or tipo == "PullRequestReviewCommentEvent":
-                data[singleuser]["fork"] = 0
+                data[singleuser]["fork"] += 1
             elif tipo == "CommitCommentEvent":
-                data[singleuser]["commit"] = 0
+                data[singleuser]["commit"] += 1
             elif tipo == "CreateEvent" or tipo == "DeleteEvent":
-                data[singleuser]["branchtag"] = 0
+                data[singleuser]["branchtag"] += 1
             else:
                 pass
             
