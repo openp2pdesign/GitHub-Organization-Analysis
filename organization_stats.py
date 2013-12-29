@@ -146,11 +146,11 @@ if __name__ == "__main__":
     
     # All activity through time, by person
     for singleuser in events:
-        print events[singleuser]
-        print "TOTAL ACTIVITY:", len(events[singleuser])
+        print "--------------------"
+        print "USER:",singleuser
+        print "TOTAL ACTIVITY:", len(events[singleuser]), "events."
         days = {}
         for j in events[singleuser]:
-            print j
             print "TIME:",events[singleuser][j]["time"]
             print "DAY:",events[singleuser][j]["time"].day
             print "MONTH:",events[singleuser][j]["time"].month
@@ -176,7 +176,14 @@ if __name__ == "__main__":
             print "L:",l,"=", ordered[l]["activity"]
         
         # Plot data    
-        plt.plot_date(x, y, linestyle="dashed", marker="o", color="green")
+
+        # Plot a bar
+        plt.bar(x, y)
+        
+        # Plot a line
+        #plt.plot_date(x, y, linestyle="dashed", marker="o", color="green")
+        
+        # Configure plot
         plt.gcf().autofmt_xdate()
         plt.xlabel("Time")
         plt.ylabel("Single activities")
@@ -188,6 +195,7 @@ if __name__ == "__main__":
         
         # Save plot
         plt.savefig(directory+"/"+singleuser+"-timeline.png",dpi=200)
+        plt.savefig(directory+"/"+singleuser+"-timeline.pdf")
         plt.show()
     
     # All activity trough time, all persons
