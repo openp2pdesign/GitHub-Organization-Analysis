@@ -147,9 +147,16 @@ if __name__ == "__main__":
     # Separate activities by person ..................................................................
     # Push, Issue, IssueComment, CommitComment, Fork, Pull
     
+    data = {}
     for singleuser in events:
         print "--------------------"
         print "USER:",singleuser
+        data[singleuser] = {}
+        data[singleuser]["push"] = 0
+        data[singleuser]["issue"] = 0
+        data[singleuser]["fork"] = 0
+        data[singleuser]["commit"] = 0
+        data[singleuser]["branchtag"] = 0
         for j in events[singleuser]:
             # Count by event types
             # List of event types: http://developer.github.com/v3/activity/events/types/          
@@ -157,15 +164,15 @@ if __name__ == "__main__":
             print "TYPE:",events[singleuser][j]["type"]
             tipo = events[singleuser][j]["type"]
             if tipo == "PushEvent":
-                print "Push"
+                data[singleuser]["push"] += 1
             elif tipo == "IssuesEvent" or tipo == "IssueCommentEvent":
-                print "Issue"
+                data[singleuser]["issue"] = 0
             elif tipo == "ForkEvent" or tipo == "PullRequestEvent" or tipo == "PullRequestReviewCommentEvent":
-                print "Fork,pull"
+                data[singleuser]["fork"] = 0
             elif tipo == "CommitCommentEvent":
-                print "Commit comment"
+                data[singleuser]["commit"] = 0
             elif tipo == "CreateEvent" or tipo == "DeleteEvent":
-                print "Branch/tag"
+                data[singleuser]["branchtag"] = 0
             else:
                 pass
             
