@@ -139,12 +139,66 @@ if __name__ == "__main__":
     # Debug
     print events
     
+    # ................................................................................................
     # Separate activities by repository ..............................................................
     # Push, Issue, IssueComment, CommitComment, Fork, Pull
     
+    # ................................................................................................
     # Separate activities by person ..................................................................
     # Push, Issue, IssueComment, CommitComment, Fork, Pull
     
+    print "--------------------"
+    print "USER:",singleuser
+    print "TOTAL ACTIVITY:", len(events[singleuser]), "events."
+    days = {}
+    for j in events[singleuser]:
+        #print "TYPE:",events[singleuser][j]["type"]
+        # Define activities per day
+        day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
+        if day not in days:
+            days[day] = {}
+            days[day]["activity"] = 0
+        days[day]["activity"] = days[day]["activity"] + 1
+    
+    # Sort the dictionary
+    ordered = OrderedDict(sorted(days.items(), key=lambda t: t[0]))
+    
+    # Transform the dictionary in x,y lists for plotting
+    x = []
+    y = []
+    for k,l in enumerate(ordered):
+        x.append(l)
+        y.append(ordered[l]["activity"])
+    
+    # Plot a bar
+    plt.bar(x, y)
+    
+    # Plot a line
+    #plt.plot_date(x, y, linestyle="dashed", marker="o", color="green")
+    
+    # Configure plot
+    plt.gcf().autofmt_xdate()
+    plt.xlabel("Time")
+    plt.ylabel("Single activities")
+    plt.title("Activity by "+singleuser)
+    # Edit the following line if you want to specify manually the time range
+    #plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
+    # The following line does automatic time range according to the life of the organization
+    plt.xlim(org.created_at,org.updated_at)
+    plt.ylim(0,max_activity)
+    
+    # Set picture size
+    # fig = plt.gcf()
+    # fig.set_size_inches(20,10.5)
+    
+    # Save plot
+    plt.savefig(directory+"/"+"Activities-by-person.png",dpi=200)
+    plt.savefig(directory+"/"+"Activities-by-person.pdf")
+    plt.show()
+
+    
+    
+    # ................................................................................................
     # All activity through time, by person ...........................................................
     
     # Get the highest level of activities, for y scale
@@ -214,6 +268,7 @@ if __name__ == "__main__":
         plt.savefig(directory+"/"+singleuser+"-timeline.pdf")
         plt.show()
     
-    # All activity trough time, all persons................................................
+    # ................................................................................................
+    # All activity trough time, all persons...........................................................
     
     print "Done."
