@@ -170,13 +170,7 @@ if __name__ == "__main__":
         print "TOTAL ACTIVITY:", len(events[singleuser]), "events."
         days = {}
         for j in events[singleuser]:
-            print "TIME:",events[singleuser][j]["time"]
-            print "DAY:",events[singleuser][j]["time"].day
-            print "MONTH:",events[singleuser][j]["time"].month
-            print "YEAR:",events[singleuser][j]["time"].year
-            print "TYPE:",events[singleuser][j]["type"]
-            print
-            
+            #print "TYPE:",events[singleuser][j]["type"]
             # Define activities per day
             day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
             if day not in days:
@@ -194,8 +188,6 @@ if __name__ == "__main__":
             x.append(l)
             y.append(ordered[l]["activity"])
         
-        # Plot data    
-
         # Plot a bar
         plt.bar(x, y)
         
@@ -207,7 +199,10 @@ if __name__ == "__main__":
         plt.xlabel("Time")
         plt.ylabel("Single activities")
         plt.title("Activity by "+singleuser)
-        plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
+        # Edit the following line if you want to specify manually the time range
+        #plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
+        # The following line does automatic time range according to the life of the organization
+        plt.xlim(org.created_at,org.updated_at)
         plt.ylim(0,max_activity)
         
         # Set picture size
