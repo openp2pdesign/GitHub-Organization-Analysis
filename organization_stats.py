@@ -162,7 +162,17 @@ if __name__ == "__main__":
         data[singleuser]["commit"] = 0
         data[singleuser]["branchtag"] = 0
         for j in events[singleuser]:
-            print "------ REPO:", events[singleuser][j]["repo"]
+            
+            # In case we get a mistake in the name of the repo...
+            if events[singleuser][j]["repo"] not in datarepo:
+                newrepo = events[singleuser][j]["repo"]
+                datarepo[newrepo]={}
+                datarepo[newrepo]["push"] = 0
+                datarepo[newrepo]["issue"] = 0
+                datarepo[newrepo]["fork"] = 0
+                datarepo[newrepo]["commit"] = 0
+                datarepo[newrepo]["branchtag"] = 0
+            
             # Count by event types
             # List of event types: http://developer.github.com/v3/activity/events/types/          
             # print "TYPE:",events[singleuser][j]["type"]
@@ -252,8 +262,7 @@ if __name__ == "__main__":
     plt.savefig(directory+"/"+"Activities-by-repository.png",dpi=200)
     plt.savefig(directory+"/"+"Activities-by-repository.pdf")
     plt.show()    
-    exit()
-    
+
     # ................................................................................................
     # Separate activities by person ..................................................................
     # Push, Issue, IssueComment, CommitComment, Fork, Pull, Branch / Tag
