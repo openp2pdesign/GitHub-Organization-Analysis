@@ -293,6 +293,11 @@ if __name__ == "__main__":
         # fig = plt.gcf()
         # fig.set_size_inches(20,10.5)
         
+        # Create a directory for saving analysis of each user
+        directory = org_to_mine+"-stats"+"/users"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        
         # Save plot
         plt.savefig(directory+"/"+singleuser+"-timeline.png",dpi=200)
         plt.savefig(directory+"/"+singleuser+"-timeline.pdf")
