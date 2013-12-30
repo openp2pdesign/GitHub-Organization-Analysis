@@ -175,19 +175,14 @@ if __name__ == "__main__":
             # print "TYPE:",events[singleuser][j]["type"]
             tipo = events[singleuser][j]["type"]
             if tipo == "PushEvent":
-                data[singleuser]["push"] += 1
                 datarepo[events[singleuser][j]["repo"]]["push"] += 1
             elif tipo == "IssuesEvent" or tipo == "IssueCommentEvent":
-                data[singleuser]["issue"] += 1
                 datarepo[events[singleuser][j]["repo"]]["issue"] += 1
             elif tipo == "ForkEvent" or tipo == "PullRequestEvent" or tipo == "PullRequestReviewCommentEvent":
-                data[singleuser]["fork"] += 1
                 datarepo[events[singleuser][j]["repo"]]["fork"] += 1
             elif tipo == "CommitCommentEvent":
-                data[singleuser]["commit"] += 1
                 datarepo[events[singleuser][j]["repo"]]["commit"] += 1
             elif tipo == "CreateEvent" or tipo == "DeleteEvent":
-                data[singleuser]["branchtag"] += 1
                 datarepo[events[singleuser][j]["repo"]]["branchtag"] += 1
             else:
                 pass
@@ -205,7 +200,7 @@ if __name__ == "__main__":
         repocommitcount.append(datarepo[singlerepo]["commit"])
         repobranchtagcount.append(datarepo[singlerepo]["branchtag"])
     
-    # Example from http://matplotlib.org/examples/api/barchart_demo.html
+    # Learnt from http://matplotlib.org/examples/api/barchart_demo.html
     N = len(datarepo)
     allrepos = datarepo.keys()
     
