@@ -143,48 +143,77 @@ if __name__ == "__main__":
     # Separate activities by repository ..............................................................
     # Push, Issue, IssueComment, CommitComment, Fork, Pull, Branch / Tag
     
+    data = {}
     datarepo = {}
+    for repo in org.get_repos():
+        fullreponame = org.login+"/"+repo.name
+        datarepo[fullreponame]={}
+        datarepo[fullreponame]["push"] = 0
+        datarepo[fullreponame]["issue"] = 0
+        datarepo[fullreponame]["fork"] = 0
+        datarepo[fullreponame]["commit"] = 0
+        datarepo[fullreponame]["branchtag"] = 0
+    
     for singleuser in events:
-        datarepo[singleuser] = {}
-        datarepo[singleuser]["push"] = 0
-        datarepo[singleuser]["issue"] = 0
-        datarepo[singleuser]["fork"] = 0
-        datarepo[singleuser]["commit"] = 0
-        datarepo[singleuser]["branchtag"] = 0
+        data[singleuser] = {}
+        data[singleuser]["push"] = 0
+        data[singleuser]["issue"] = 0
+        data[singleuser]["fork"] = 0
+        data[singleuser]["commit"] = 0
+        data[singleuser]["branchtag"] = 0
         for j in events[singleuser]:
+            print "------ REPO:", events[singleuser][j]["repo"]
             # Count by event types
             # List of event types: http://developer.github.com/v3/activity/events/types/          
             # print "TYPE:",events[singleuser][j]["type"]
             tipo = events[singleuser][j]["type"]
             if tipo == "PushEvent":
-                datarepo[singleuser]["push"] += 1
+                data[singleuser]["push"] += 1
+                datarepo[events[singleuser][j]["repo"]]["push"] += 1
             elif tipo == "IssuesEvent" or tipo == "IssueCommentEvent":
-                datarepo[singleuser]["issue"] += 1
+                data[singleuser]["issue"] += 1
+                datarepo[events[singleuser][j]["repo"]]["issue"] += 1
             elif tipo == "ForkEvent" or tipo == "PullRequestEvent" or tipo == "PullRequestReviewCommentEvent":
-                datarepo[singleuser]["fork"] += 1
+                data[singleuser]["fork"] += 1
+                datarepo[events[singleuser][j]["repo"]]["fork"] += 1
             elif tipo == "CommitCommentEvent":
-                datarepo[singleuser]["commit"] += 1
+                data[singleuser]["commit"] += 1
+                datarepo[events[singleuser][j]["repo"]]["commit"] += 1
             elif tipo == "CreateEvent" or tipo == "DeleteEvent":
-                datarepo[singleuser]["branchtag"] += 1
+                data[singleuser]["branchtag"] += 1
+                datarepo[events[singleuser][j]["repo"]]["branchtag"] += 1
             else:
                 pass
             
-    # Transform the dictionary into lists of data
+    # Transform the users dictionary into lists of data
     pushcount = []
     issuecount = []
     forkcount = []
     commitcount = []
     branchtagcount = []
+    for singlerepo in datarepo:
+        pushcount.append(datarepo[singlerepo]["push"])
+        issuecount.append(datarepo[singlerepo]["issue"])
+        forkcount.append(datarepo[singlerepo]["fork"])
+        commitcount.append(datarepo[singlerepo]["commit"])
+        branchtagcount.append(datarepo[singlerepo]["branchtag"])
+        
+    # Transform the repo dictionary into lists of data
+    repopushcount = []
+    repoissuecount = []
+    repoforkcount = []
+    repocommitcount = []
+    repobranchtagcount = []
     for singleuser in events:
-        pushcount.append(datarepo[singleuser]["push"])
-        issuecount.append(datarepo[singleuser]["issue"])
-        forkcount.append(datarepo[singleuser]["fork"])
-        commitcount.append(datarepo[singleuser]["commit"])
-        branchtagcount.append(datarepo[singleuser]["branchtag"])
+        repopushcount.append(data[singleuser]["push"])
+        repoissuecount.append(data[singleuser]["issue"])
+        repoforkcount.append(data[singleuser]["fork"])
+        repocommitcount.append(data[singleuser]["commit"])
+        repobranchtagcount.append(data[singleuser]["branchtag"])
     
     # Example from http://matplotlib.org/examples/api/barchart_demo.html
-    N = len(events)
-    allusers = events.keys()
+    N = len(datarepo)
+    allrepos = datarepo.keys()
     
     ind = np.arange(N)  # the x locations for the groups
     width = 0.15       # the width of the bars
@@ -201,7 +230,7 @@ if __name__ == "__main__":
     ax.set_xlabel('Repositories')
     ax.set_title('Activity by repository')
     ax.set_xticks(ind+width)
-    ax.set_xticklabels(allusers)
+    ax.set_xticklabels(allrepos)
     plt.gcf().autofmt_xdate()
     
     ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0], rects5[0]), ('Push', 'Issues', 'Fork', 'Commit Comment', 'Branch/Tag') )
@@ -223,7 +252,7 @@ if __name__ == "__main__":
     plt.savefig(directory+"/"+"Activities-by-repository.png",dpi=200)
     plt.savefig(directory+"/"+"Activities-by-repository.pdf")
     plt.show()    
-    
+    exit()
     
     # ................................................................................................
     # Separate activities by person ..................................................................
