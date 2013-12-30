@@ -192,31 +192,18 @@ if __name__ == "__main__":
             else:
                 pass
             
-    # Transform the users dictionary into lists of data
-    pushcount = []
-    issuecount = []
-    forkcount = []
-    commitcount = []
-    branchtagcount = []
-    for singlerepo in datarepo:
-        pushcount.append(datarepo[singlerepo]["push"])
-        issuecount.append(datarepo[singlerepo]["issue"])
-        forkcount.append(datarepo[singlerepo]["fork"])
-        commitcount.append(datarepo[singlerepo]["commit"])
-        branchtagcount.append(datarepo[singlerepo]["branchtag"])
-        
     # Transform the repo dictionary into lists of data
     repopushcount = []
     repoissuecount = []
     repoforkcount = []
     repocommitcount = []
     repobranchtagcount = []
-    for singleuser in events:
-        repopushcount.append(data[singleuser]["push"])
-        repoissuecount.append(data[singleuser]["issue"])
-        repoforkcount.append(data[singleuser]["fork"])
-        repocommitcount.append(data[singleuser]["commit"])
-        repobranchtagcount.append(data[singleuser]["branchtag"])
+    for singlerepo in datarepo:
+        repopushcount.append(datarepo[singlerepo]["push"])
+        repoissuecount.append(datarepo[singlerepo]["issue"])
+        repoforkcount.append(datarepo[singlerepo]["fork"])
+        repocommitcount.append(datarepo[singlerepo]["commit"])
+        repobranchtagcount.append(datarepo[singlerepo]["branchtag"])
     
     # Example from http://matplotlib.org/examples/api/barchart_demo.html
     N = len(datarepo)
@@ -226,11 +213,11 @@ if __name__ == "__main__":
     width = 0.15       # the width of the bars
     
     fig, ax = plt.subplots(figsize=(18,6))
-    rects1 = ax.bar(ind, pushcount, width, color='r')
-    rects2 = ax.bar(ind+width, issuecount, width, color='y')
-    rects3 = ax.bar(ind+width*2, forkcount, width, color='b')
-    rects4 = ax.bar(ind+width*3, commitcount, width, color='g')
-    rects5 = ax.bar(ind+width*4, branchtagcount, width, color='m')
+    rects1 = ax.bar(ind, repopushcount, width, color='r')
+    rects2 = ax.bar(ind+width, repoissuecount, width, color='y')
+    rects3 = ax.bar(ind+width*2, repoforkcount, width, color='b')
+    rects4 = ax.bar(ind+width*3, repocommitcount, width, color='g')
+    rects5 = ax.bar(ind+width*4, repobranchtagcount, width, color='m')
     
     # Configure the graph
     ax.set_ylabel('Activity')
