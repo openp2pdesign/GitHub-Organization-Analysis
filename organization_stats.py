@@ -186,22 +186,21 @@ if __name__ == "__main__":
         commitcount.append(data[singleuser]["commit"])
         branchtagcount.append(data[singleuser]["branchtag"])
     
-    print "PUSH values:",pushcount
-    print "ISSUES values:",issuecount
-    print len(pushcount)
-    
     # Example from http://matplotlib.org/examples/api/barchart_demo.html
     N = len(events)
     allusers = events.keys()
     
     ind = np.arange(N)  # the x locations for the groups
-    width = 0.35       # the width of the bars
+    width = 0.15       # the width of the bars
     
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(18,6))
     rects1 = ax.bar(ind, pushcount, width, color='r')
     rects2 = ax.bar(ind+width, issuecount, width, color='y')
+    rects3 = ax.bar(ind+width*2, forkcount, width, color='b')
+    rects4 = ax.bar(ind+width*3, commitcount, width, color='g')
+    rects5 = ax.bar(ind+width*4, branchtagcount, width, color='m')
     
-    # add some
+    # Configure the graph
     ax.set_ylabel('Activity')
     ax.set_xlabel('Users')
     ax.set_title('Activity by user')
@@ -209,7 +208,7 @@ if __name__ == "__main__":
     ax.set_xticklabels(allusers)
     plt.gcf().autofmt_xdate()
     
-    ax.legend( (rects1[0], rects2[0]), ('Push', 'Issues') )
+    ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0], rects5[0]), ('Push', 'Issues', 'Fork', 'Commit Comment', 'Branch/Tag') )
     
     def autolabel(rects):
         # attach some text labels
@@ -220,18 +219,14 @@ if __name__ == "__main__":
     
     autolabel(rects1)
     autolabel(rects2)
-    
-    # Set picture size
-    # fig = plt.gcf()
-    # fig.set_size_inches(20,10.5)
+    autolabel(rects3)
+    autolabel(rects4)
+    autolabel(rects5)
     
     # Save plot
     plt.savefig(directory+"/"+"Activities-by-person.png",dpi=200)
     plt.savefig(directory+"/"+"Activities-by-person.pdf")
-    plt.show()
-    exit()
-
-    
+    plt.show()    
     
     # ................................................................................................
     # All activity through time, by person ...........................................................
