@@ -141,11 +141,93 @@ if __name__ == "__main__":
     
     # ................................................................................................
     # Separate activities by repository ..............................................................
-    # Push, Issue, IssueComment, CommitComment, Fork, Pull
+    # Push, Issue, IssueComment, CommitComment, Fork, Pull, Branch / Tag
+    
+    datarepo = {}
+    for singleuser in events:
+        datarepo[singleuser] = {}
+        datarepo[singleuser]["push"] = 0
+        datarepo[singleuser]["issue"] = 0
+        datarepo[singleuser]["fork"] = 0
+        datarepo[singleuser]["commit"] = 0
+        datarepo[singleuser]["branchtag"] = 0
+        for j in events[singleuser]:
+            # Count by event types
+            # List of event types: http://developer.github.com/v3/activity/events/types/          
+            # print "TYPE:",events[singleuser][j]["type"]
+            tipo = events[singleuser][j]["type"]
+            if tipo == "PushEvent":
+                datarepo[singleuser]["push"] += 1
+            elif tipo == "IssuesEvent" or tipo == "IssueCommentEvent":
+                datarepo[singleuser]["issue"] += 1
+            elif tipo == "ForkEvent" or tipo == "PullRequestEvent" or tipo == "PullRequestReviewCommentEvent":
+                datarepo[singleuser]["fork"] += 1
+            elif tipo == "CommitCommentEvent":
+                datarepo[singleuser]["commit"] += 1
+            elif tipo == "CreateEvent" or tipo == "DeleteEvent":
+                datarepo[singleuser]["branchtag"] += 1
+            else:
+                pass
+            
+    # Transform the dictionary into lists of data
+    pushcount = []
+    issuecount = []
+    forkcount = []
+    commitcount = []
+    branchtagcount = []
+    for singleuser in events:
+        pushcount.append(datarepo[singleuser]["push"])
+        issuecount.append(datarepo[singleuser]["issue"])
+        forkcount.append(datarepo[singleuser]["fork"])
+        commitcount.append(datarepo[singleuser]["commit"])
+        branchtagcount.append(datarepo[singleuser]["branchtag"])
+    
+    # Example from http://matplotlib.org/examples/api/barchart_demo.html
+    N = len(events)
+    allusers = events.keys()
+    
+    ind = np.arange(N)  # the x locations for the groups
+    width = 0.15       # the width of the bars
+    
+    fig, ax = plt.subplots(figsize=(18,6))
+    rects1 = ax.bar(ind, pushcount, width, color='r')
+    rects2 = ax.bar(ind+width, issuecount, width, color='y')
+    rects3 = ax.bar(ind+width*2, forkcount, width, color='b')
+    rects4 = ax.bar(ind+width*3, commitcount, width, color='g')
+    rects5 = ax.bar(ind+width*4, branchtagcount, width, color='m')
+    
+    # Configure the graph
+    ax.set_ylabel('Activity')
+    ax.set_xlabel('Repositories')
+    ax.set_title('Activity by repository')
+    ax.set_xticks(ind+width)
+    ax.set_xticklabels(allusers)
+    plt.gcf().autofmt_xdate()
+    
+    ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0], rects5[0]), ('Push', 'Issues', 'Fork', 'Commit Comment', 'Branch/Tag') )
+    
+    def autolabel(rects):
+        # attach some text labels
+        for rect in rects:
+            height = rect.get_height()
+            ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, '%d'%int(height),
+                    ha='center', va='bottom')
+    
+    autolabel(rects1)
+    autolabel(rects2)
+    autolabel(rects3)
+    autolabel(rects4)
+    autolabel(rects5)
+    
+    # Save plot
+    plt.savefig(directory+"/"+"Activities-by-repository.png",dpi=200)
+    plt.savefig(directory+"/"+"Activities-by-repository.pdf")
+    plt.show()    
+    
     
     # ................................................................................................
     # Separate activities by person ..................................................................
-    # Push, Issue, IssueComment, CommitComment, Fork, Pull
+    # Push, Issue, IssueComment, CommitComment, Fork, Pull, Branch / Tag
     
     data = {}
     for singleuser in events:
