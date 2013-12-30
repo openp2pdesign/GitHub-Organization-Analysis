@@ -136,9 +136,6 @@ if __name__ == "__main__":
         events[j.actor.login][j.id]["type"] = j.type
         events[j.actor.login][j.id]["repo"] = j.repo.name
     
-    # Debug
-    print events
-    
     # ................................................................................................
     # Separate activities by repository ..............................................................
     # Push, Issue, IssueComment, CommitComment, Fork, Pull, Branch / Tag
