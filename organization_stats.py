@@ -203,6 +203,10 @@ if __name__ == "__main__":
     # Learnt from http://matplotlib.org/examples/api/barchart_demo.html
     N = len(datarepo)
     allrepos = datarepo.keys()
+    # Remove the name of the group from the repositories' names
+    remove = org.login+"/"
+    for enum,h in enumerate(allrepos):
+        allrepos[enum] = allrepos[enum].replace(remove, "")
     
     ind = np.arange(N)  # the x locations for the groups
     width = 0.15       # the width of the bars
