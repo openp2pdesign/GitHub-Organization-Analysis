@@ -21,6 +21,7 @@ import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from mpl_toolkits.mplot3d import Axes3D
 import os
 import operator
 
@@ -404,23 +405,55 @@ if __name__ == "__main__":
         # Save plot
         plt.savefig(directory+"/"+singleuser+"-timeline.png",dpi=200)
         plt.savefig(directory+"/"+singleuser+"-timeline.pdf")
-        plt.show()
+        #plt.show()
     
     # ................................................................................................
     # All activity trough time, all persons...........................................................
     
+    # Calculate values for all users
+    allusers = {}
+    for singleuser in events:
+        print "--------------------"
+        print "USER:",singleuser
+        print "TOTAL ACTIVITY:", len(events[singleuser]), "events."
+        days = {}
+        for j in events[singleuser]:
+            # Define activities per day
+            allusers[singleuser] = {}
+            allusers[singleuser]["days"] = {}
+            day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
+            if day not in days:
+                days[day] = {}
+                days[day]["activity"] = 0
+            days[day]["activity"] = days[day]["activity"] + 1
+        
+        # Sort the dictionary
+        ordered = OrderedDict(sorted(days.items(), key=lambda t: t[0]))
+        
+        # Transform the dictionary in x,y lists for plotting
+        x = []
+        y = []
+        for k,l in enumerate(ordered):
+            x.append(l)
+            y.append(ordered[l]["activity"])
+            allusers[singleuser]["days"][k] = ordered[l]["activity"]
+    
+    
     # Learnt from http://matplotlib.org/examples/mplot3d/bars3d_demo.html
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    for c, z in zip(['r', 'g', 'b', 'y'], [30, 20, 10, 0]):
-        xs = np.arange(20)
-        ys = np.random.rand(20)
-        cs = [c] * len(xs)
-        ax.bar(xs, ys, zs=z, zdir='y', color=cs, alpha=0.8)
+    for c, z in enumerate(allusers):
+        print "C",c
+        print "Z",z
+        print allusers[z]["days"]
+        #ax.bar(xs, ys, zs=z, zdir='y', color=cs, alpha=0.8)
     
-    ax.set_xlabel('Pippo')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
+    # Configure plot
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Users')
+    ax.set_zlabel('Activity')
+    ax.set_title("Activity of all users")
+    plt.gcf().autofmt_xdate()
     #plt.savefig("prova3d.png",dpi=200)
     plt.show()
     
