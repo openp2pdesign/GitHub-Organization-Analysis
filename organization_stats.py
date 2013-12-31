@@ -409,4 +409,20 @@ if __name__ == "__main__":
     # ................................................................................................
     # All activity trough time, all persons...........................................................
     
+    # Learnt from http://matplotlib.org/examples/mplot3d/bars3d_demo.html
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    for c, z in zip(['r', 'g', 'b', 'y'], [30, 20, 10, 0]):
+        xs = np.arange(20)
+        ys = np.random.rand(20)
+        cs = [c] * len(xs)
+        ax.bar(xs, ys, zs=z, zdir='y', color=cs, alpha=0.8)
+    
+    ax.set_xlabel('Pippo')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+    #plt.savefig("prova3d.png",dpi=200)
+    plt.show()
+    
+    
     print "Done."
