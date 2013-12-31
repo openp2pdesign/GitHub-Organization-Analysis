@@ -436,7 +436,8 @@ if __name__ == "__main__":
         for k,l in enumerate(ordered):
             x.append(l)
             y.append(ordered[l]["activity"])
-            allusers[singleuser]["days"][k] = ordered[l]["activity"]
+            allusers[singleuser]["days"] = {}
+            allusers[singleuser]["days"][l] = ordered[l]["activity"]
     
     
     # Learnt from http://matplotlib.org/examples/mplot3d/bars3d_demo.html
