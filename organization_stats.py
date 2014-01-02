@@ -417,27 +417,39 @@ if __name__ == "__main__":
         print "USER:",singleuser
         print "TOTAL ACTIVITY:", len(events[singleuser]), "events."
         days = {}
+        allusers[singleuser] = {}
         for j in events[singleuser]:
             # Define activities per day
-            allusers[singleuser] = {}
-            allusers[singleuser]["days"] = {}
             day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
             if day not in days:
                 days[day] = {}
                 days[day]["activity"] = 0
-            days[day]["activity"] = days[day]["activity"] + 1
+            days[day]["activity"] += 1
+        for h,j in enumerate(days):  
+            # Get activities per day for each user
+            allusers[singleuser][h] = {}
+            allusers[singleuser][h]["day"] = j
+            allusers[singleuser][h]["activity"] = days[j]["activity"]
+    
+    # Sort the dictionary
+    ordered = OrderedDict(sorted(days.items(), key=lambda t: t[0]))    
+    for z in allusers:
+        # Order all the users dictionaries
+        ordered2 = OrderedDict(sorted(allusers[z].items(), key=lambda t: t[1]["day"]))
+        allusers[z] = ordered2
+    
+    # Transform the dictionaries in strings
+    
+    # Transform the dictionary in x,y lists for plotting
+    x = []
+    y = []
+    #allusers[singleuser]["days"] = {}
+    for k,l in enumerate(ordered):
+        x.append(l)
+        y.append(ordered[l]["activity"])
         
-        # Sort the dictionary
-        ordered = OrderedDict(sorted(days.items(), key=lambda t: t[0]))
-        
-        # Transform the dictionary in x,y lists for plotting
-        x = []
-        y = []
-        for k,l in enumerate(ordered):
-            x.append(l)
-            y.append(ordered[l]["activity"])
-            allusers[singleuser]["days"] = {}
-            allusers[singleuser]["days"][l] = ordered[l]["activity"]
+        allusers[singleuser]["day"] = l
+        allusers[singleuser]["activity"] = ordered[l]["activity"]
     
     
     # Learnt from http://matplotlib.org/examples/mplot3d/bars3d_demo.html
