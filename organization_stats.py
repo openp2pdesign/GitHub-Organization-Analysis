@@ -456,7 +456,8 @@ if __name__ == "__main__":
     
     # Configure plot
     ax.set_xlabel('Time')
-    ax.set_ylabel('Users')
+    #ax.set_ylabel('Users')
+    plt.gca().yaxis.set_major_locator(plt.NullLocator())
     ax.set_zlabel('Activity')
     ax.set_title("Activity of all users")
     plt.gcf().autofmt_xdate()
