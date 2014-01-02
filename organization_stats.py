@@ -398,13 +398,13 @@ if __name__ == "__main__":
         # fig.set_size_inches(20,10.5)
         
         # Create a directory for saving analysis of each user
-        directory = org_to_mine+"-stats"+"/users"
-        if not os.path.exists(directory):
-            os.makedirs(directory)
+        directory2 = org_to_mine+"-stats"+"/users"
+        if not os.path.exists(directory2):
+            os.makedirs(directory2)
         
         # Save plot
-        plt.savefig(directory+"/"+singleuser+"-timeline.png",dpi=200)
-        plt.savefig(directory+"/"+singleuser+"-timeline.pdf")
+        plt.savefig(directory2+"/"+singleuser+"-timeline.png",dpi=200)
+        plt.savefig(directory2+"/"+singleuser+"-timeline.pdf")
         plt.show()
     
     # ................................................................................................
