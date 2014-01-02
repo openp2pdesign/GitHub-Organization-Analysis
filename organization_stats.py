@@ -449,15 +449,24 @@ if __name__ == "__main__":
             alluserslist[l]["y"].append(allusers[l][h]["activity"])
    
     # Learnt from http://matplotlib.org/examples/mplot3d/bars3d_demo.html
-    fig = plt.figure()
+    fig = plt.figure(figsize=(10,10))
     ax = fig.add_subplot(111, projection='3d')
     for c, z in enumerate(alluserslist):
-        ax.bar(alluserslist[z]["x"], alluserslist[z]["y"], c*10, zdir='y', color=np.random.rand(3,1), alpha=0.8)
+        ax.bar(alluserslist[z]["x"], alluserslist[z]["y"], c*10, zdir='y', color=np.random.rand(3,1), alpha=0.5)
+    
+    useraxis = []
+    position = []
+    for k,c in enumerate(alluserslist):
+        useraxis.append(c)
+        position.append(k*10)
     
     # Configure plot
-    ax.set_xlabel('Time')
+    #ax.set_xlabel('Time')
     #ax.set_ylabel('Users')
-    plt.gca().yaxis.set_major_locator(plt.NullLocator())
+    # Edit the following line for hiding an axis tick
+    #plt.gca().xaxis.set_major_locator(plt.NullLocator())
+    plt.yticks(position,useraxis,rotation=-22.5)
+    ax.set_zlim([0.5,max_activity+5])
     ax.set_zlabel('Activity')
     ax.set_title("Activity of all users")
     plt.gcf().autofmt_xdate()
