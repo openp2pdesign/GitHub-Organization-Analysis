@@ -452,13 +452,7 @@ if __name__ == "__main__":
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     for c, z in enumerate(alluserslist):
-        print "C",c
-        print "Z",z
-        print "X:",alluserslist[z]["x"]
-        print "Y:",alluserslist[z]["y"]
-        ys = 20
-        cs = [c] * len(alluserslist[z]["x"])
-        ax.bar(alluserslist[z]["x"], alluserslist[z]["y"], c*10, zdir='y', color="b", alpha=0.8)
+        ax.bar(alluserslist[z]["x"], alluserslist[z]["y"], c*10, zdir='y', color=np.random.rand(3,1), alpha=0.8)
     
     # Configure plot
     ax.set_xlabel('Time')
@@ -466,8 +460,11 @@ if __name__ == "__main__":
     ax.set_zlabel('Activity')
     ax.set_title("Activity of all users")
     plt.gcf().autofmt_xdate()
-    #plt.savefig("prova3d.png",dpi=200)
-    plt.show()
+    
+    # Save plot
+    plt.savefig(directory+"/"+"Activities-for-all-people-3D.png",dpi=200)
+    plt.savefig(directory+"/"+"Activities-for-all-people-3D.pdf")
+    plt.show() 
     
     
     print "Done."
