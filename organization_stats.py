@@ -445,8 +445,8 @@ if __name__ == "__main__":
         alluserslist[l]["x"] = []
         alluserslist[l]["y"] = []
         for h in allusers[l]:
-            alluserslist[l]["x"].append(h["day"])
-            alluserslist[l]["y"].append(h["activity"])
+            alluserslist[l]["x"].append(allusers[l][h]["day"])
+            alluserslist[l]["y"].append(allusers[l][h]["activity"])
    
     # Learnt from http://matplotlib.org/examples/mplot3d/bars3d_demo.html
     fig = plt.figure()
