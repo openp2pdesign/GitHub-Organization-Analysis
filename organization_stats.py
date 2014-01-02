@@ -438,27 +438,24 @@ if __name__ == "__main__":
         ordered2 = OrderedDict(sorted(allusers[z].items(), key=lambda t: t[1]["day"]))
         allusers[z] = ordered2
     
-    # Transform the dictionaries in strings
-    
-    # Transform the dictionary in x,y lists for plotting
-    x = []
-    y = []
-    #allusers[singleuser]["days"] = {}
-    for k,l in enumerate(ordered):
-        x.append(l)
-        y.append(ordered[l]["activity"])
-        
-        allusers[singleuser]["day"] = l
-        allusers[singleuser]["activity"] = ordered[l]["activity"]
-    
-    
+    # Transform the dictionaries in strings for plotting
+    alluserslist = {}
+    for l in allusers:
+        alluserslist[l] = {}
+        alluserslist[l]["x"] = []
+        alluserslist[l]["y"] = []
+        for h in allusers[l]:
+            alluserslist[l]["x"].append(h["day"])
+            alluserslist[l]["y"].append(h["activity"])
+   
     # Learnt from http://matplotlib.org/examples/mplot3d/bars3d_demo.html
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    for c, z in enumerate(allusers):
+    for c, z in enumerate(alluserslist):
         print "C",c
         print "Z",z
-        print allusers[z]["days"]
+        print "X:",alluserslist[z]["x"]
+        print "Y:",alluserslist[z]["y"]
         #ax.bar(xs, ys, zs=z, zdir='y', color=cs, alpha=0.8)
     
     # Configure plot
