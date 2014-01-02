@@ -405,7 +405,7 @@ if __name__ == "__main__":
         # Save plot
         plt.savefig(directory+"/"+singleuser+"-timeline.png",dpi=200)
         plt.savefig(directory+"/"+singleuser+"-timeline.pdf")
-        #plt.show()
+        plt.show()
     
     # ................................................................................................
     # All activity trough time, all persons...........................................................
@@ -456,7 +456,9 @@ if __name__ == "__main__":
         print "Z",z
         print "X:",alluserslist[z]["x"]
         print "Y:",alluserslist[z]["y"]
-        #ax.bar(xs, ys, zs=z, zdir='y', color=cs, alpha=0.8)
+        ys = 20
+        cs = [c] * len(alluserslist[z]["x"])
+        ax.bar(alluserslist[z]["x"], alluserslist[z]["y"], c*10, zdir='y', color="b", alpha=0.8)
     
     # Configure plot
     ax.set_xlabel('Time')
