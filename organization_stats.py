@@ -411,10 +411,37 @@ if __name__ == "__main__":
         plt.savefig(directory2+"/"+singleuser+"-timeline.png",dpi=200)
         plt.savefig(directory2+"/"+singleuser+"-timeline.pdf")
         plt.show()
-    
+        
+        
     # ................................................................................................
     # All activity trough time, all persons...........................................................
     
+    # Plot a bar
+    plt.bar(x, y)
+    
+    # Plot a line
+    #plt.plot_date(x, y, linestyle="dashed", marker="o", color="green")
+    
+    # Configure plot
+    plt.gcf().autofmt_xdate()
+    plt.xlabel("Time")
+    plt.ylabel("Single activities")
+    plt.title("Activity of all users")
+    # Edit the following line if you want to specify manually the time range
+    #plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
+    # The following line does automatic time range according to the life of the organization
+    plt.xlim(org.created_at,lastevent[0])
+    plt.ylim(0,max_activity)
+    
+    # Save plot
+    plt.savefig(directory+"/"+"complete-activity-timeline.png",dpi=200)
+    plt.savefig(directory+"/"+"complete-activity-timeline.pdf")
+    plt.show()
+    
+    
+    # ................................................................................................
+    # All activity trough time, all persons - 3D .....................................................
+
     # Calculate values for all users
     allusers = {}
     for singleuser in events:
