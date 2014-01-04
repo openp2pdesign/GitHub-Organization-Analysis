@@ -128,14 +128,19 @@ if __name__ == "__main__":
         
     # Get all events in the organization
     # Description: http://developer.github.com/v3/activity/events/types/
+    print "------"
+    print "EVENTS"
+    print
+    lastevent = []
     for j in org.get_events():
-        print "-- ",j.type,"event by",j.actor.login,"from repo:",j.repo.name
+        print "-- ",j.type,"event by",j.actor.login,"from repo:",j.repo.name, "at",j.created_at
         if j.actor.login not in events:
             events[j.actor.login] = {}        
         events[j.actor.login][j.id] = {}
         events[j.actor.login][j.id]["time"] = j.created_at
         events[j.actor.login][j.id]["type"] = j.type
         events[j.actor.login][j.id]["repo"] = j.repo.name
+        lastevent.append(j.created_at)
     
     # ................................................................................................
     # Separate activities by repository ..............................................................
@@ -358,7 +363,6 @@ if __name__ == "__main__":
         print "TOTAL ACTIVITY:", len(events[singleuser]), "events."
         days = {}
         for j in events[singleuser]:
-            #print "TYPE:",events[singleuser][j]["type"]
             # Define activities per day
             day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
             if day not in days:
@@ -390,7 +394,7 @@ if __name__ == "__main__":
         # Edit the following line if you want to specify manually the time range
         #plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
         # The following line does automatic time range according to the life of the organization
-        plt.xlim(org.created_at,org.updated_at)
+        plt.xlim(org.created_at,lastevent[0])
         plt.ylim(0,max_activity)
         
         # Set picture size
