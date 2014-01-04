@@ -323,8 +323,9 @@ if __name__ == "__main__":
         # attach some text labels
         for rect in rects:
             height = rect.get_height()
-            ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, '%d'%int(height),
-                    ha='center', va='bottom')
+            if height != 0:
+                ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, '%d'%int(height),
+                        ha='center', va='bottom')
     
     autolabel(rects1)
     autolabel(rects2)
@@ -453,8 +454,12 @@ if __name__ == "__main__":
             alluserslist[l]["y"].append(allusers[l][h]["activity"])
    
     # Learnt from http://matplotlib.org/examples/mplot3d/bars3d_demo.html
-    fig = plt.figure(figsize=(10,10))
-    ax = fig.add_subplot(111, projection='3d')
+    #fig = plt.figure(figsize=(10,10))
+    #ax = fig.add_subplot(111, projection='3d')
+    
+    fig = plt.figure(figsize=plt.figaspect(1)*1.5)
+    ax = fig.gca(projection='3d')
+    
     for c, z in enumerate(alluserslist):
         ax.bar(alluserslist[z]["x"], alluserslist[z]["y"], c*10, zdir='y', color=np.random.rand(3,1), alpha=0.5)
     
