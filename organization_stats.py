@@ -416,6 +416,29 @@ if __name__ == "__main__":
     # ................................................................................................
     # All activity trough time, all persons...........................................................
     
+    # Calculate values for all users
+    allactivities = {}
+    for singleuser in events:
+        days = {}
+        for j in events[singleuser]:
+            # Define activities per day
+            day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
+            if day not in allactivities:
+                allactivities[day] = {}
+                allactivities[day]["activity"] = 0
+                allactivities[day]["day"] = day
+            allactivities[day]["activity"] += 1
+    
+    # Sort the dictionary
+    ordered = OrderedDict(sorted(allactivities.items(), key=lambda t: t[0]))    
+    
+    # Transform the dictionaries in strings for plotting
+    x = []
+    y = []
+    for l in allactivities:
+        x.append(allactivities[l]["day"])
+        y.append(allactivities[l]["activity"])
+    
     # Plot a bar
     plt.bar(x, y)
     
