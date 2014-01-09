@@ -32,6 +32,9 @@ try:
 except ImportError:
     OrderedDict = dict
 
+import json
+import copy
+
 users = {}
 events = {}
 
@@ -143,6 +146,15 @@ if __name__ == "__main__":
         events[j.actor.login][j.id]["type"] = j.type
         events[j.actor.login][j.id]["repo"] = j.repo.name
         lastevent.append(j.created_at)
+    
+    # Save content as json file
+    save_events = copy.deepcopy(events)
+    for i in save_events:
+        for k in save_events[i]:
+            save_events[i][k]["time"] = str(save_events[i][k]["time"])
+    with open(directory+"/"+"events.json", 'w') as outfile:
+        json.dump(save_events, outfile)
+    # convert it back to python datetime: datetime.strptime('2013-12-17 22:14:12', '%Y-%m-%d %H:%M:%S')
     
     # ................................................................................................
     # Separate activities by repository ..............................................................
