@@ -13,6 +13,8 @@
 # PyGitHub documentation can be found here: 
 # https://github.com/jacquev6/PyGithub
 #
+# It gets only last 300 events, so the graphs start from the last event mapped
+#
 
 from github import Github
 import getpass
@@ -133,7 +135,7 @@ if __name__ == "__main__":
     print
     lastevent = []
     for j in org.get_events():
-        print "-- ",j.type,"event by",j.actor.login,"from repo:",j.repo.name, "at",j.created_at
+        print "-- ",j.type,"event by",j.actor.login,"from repo:",j.repo.name, "at",j.created_at, "ID:",j.id
         if j.actor.login not in events:
             events[j.actor.login] = {}        
         events[j.actor.login][j.id] = {}
@@ -395,7 +397,8 @@ if __name__ == "__main__":
         # Edit the following line if you want to specify manually the time range
         #plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
         # The following line does automatic time range according to the life of the organization
-        plt.xlim(org.created_at,lastevent[0])
+        #plt.xlim(org.created_at,lastevent[0])
+        plt.xlim(lastevent[-1],lastevent[0])
         plt.ylim(0,max_activity)
         
         # Set picture size
@@ -458,7 +461,8 @@ if __name__ == "__main__":
     # Edit the following line if you want to specify manually the time range
     #plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
     # The following line does automatic time range according to the life of the organization
-    plt.xlim(org.created_at,lastevent[0])
+    #plt.xlim(org.created_at,lastevent[0])
+    plt.xlim(lastevent[-1],lastevent[0])
     plt.ylim(0,max_activity2)
     
     # Save plot
