@@ -14,7 +14,7 @@
 # https://github.com/jacquev6/PyGithub
 #
 # It gets only last 300 events, so the graphs start from the last event mapped
-#
+# See http://developer.github.com/v3/activity/events/
 
 from github import Github
 import getpass
