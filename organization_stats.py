@@ -41,26 +41,26 @@ events = {}
 if __name__ == "__main__":
     print "Simple statistics of your GitHub Organization"
     print ""
-    choice = raw_input("Do you want to mine GitHub or to load an existing .json file?(yes - no) ")
+    choice = raw_input("Do you want to mine GitHub or to load an existing .json file? (yes - no) ")
     print ""
+    
+    userlogin = raw_input("Login: Enter your username: ")
+    password = getpass.getpass("Login: Enter yor password: ")
+    username = raw_input("Enter the username you want to analyse: ")
+    print ""
+    g = Github( userlogin, password )
+    
+    print "ORGANIZATIONS:"
+    for i in g.get_user(username).get_orgs():
+        print "-", i.login
+    print ""
+    
+    org_to_mine = raw_input("Enter the name of the Organization you want to analyse: ")
+    print ""
+    
+    org = g.get_organization(org_to_mine)
+    
     if choice == "yes" or choice == "Yes" or choice == "YES":
-        userlogin = raw_input("Login: Enter your username: ")
-        password = getpass.getpass("Login: Enter yor password: ")
-        username = raw_input("Enter the username you want to analyse: ")
-        print ""
-        g = Github( userlogin, password )
-        
-        
-        print "ORGANIZATIONS:"
-        for i in g.get_user(username).get_orgs():
-            print "-", i.login
-        print ""
-        
-        org_to_mine = raw_input("Enter the name of the Organization you want to analyse: ")
-        print ""
-        
-        org = g.get_organization(org_to_mine)
-        
         # Create a directory with the name of the organization for saving analysis
         directory = org_to_mine+"-stats"
         if not os.path.exists(directory):
@@ -157,11 +157,18 @@ if __name__ == "__main__":
                 save_events[i][k]["time"] = str(save_events[i][k]["time"])
         with open(directory+"/"+"events.json", 'w') as outfile:
             json.dump(save_events, outfile)
-        # convert it back to python datetime: datetime.strptime('2013-12-17 22:14:12', '%Y-%m-%d %H:%M:%S')
+        # convert it back to python datetime: datetime.datetime.strptime('2013-12-17 22:14:12', '%Y-%m-%d %H:%M:%S')
     
     elif choice == "no" or choice == "No" or choice == "NO":
-        pause = raw_input("Copy your file events.json in the current directory and press Enter")
+        directory = raw_input("Write the name of the directory containing the events.json file:")
         print "Loading file events.json"
+        with open(directory+'/events.json') as data_file:    
+            events = json.load(data_file)
+        lastevent = []
+        for i in events:
+            for k in events[i]:
+                events[i][k]["time"] = datetime.datetime.strptime(events[i][k]["time"], '%Y-%m-%d %H:%M:%S')
+                lastevent.append(events[i][k]["time"])
     
     # ................................................................................................
     # Separate activities by repository ..............................................................
