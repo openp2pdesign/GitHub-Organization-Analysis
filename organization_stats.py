@@ -418,6 +418,8 @@ if __name__ == "__main__":
     
     # Calculate values for all users
     allactivities = {}
+    max_activities = []
+    max_single_activities = []
     for singleuser in events:
         days = {}
         for j in events[singleuser]:
@@ -428,6 +430,9 @@ if __name__ == "__main__":
                 allactivities[day]["activity"] = 0
                 allactivities[day]["day"] = day
             allactivities[day]["activity"] += 1
+            max_single_activities.append(allactivities[day]["activity"])
+        max_activities.append(max(max_single_activities))
+    max_activity2 = max(max_activities)
     
     # Sort the dictionary
     ordered = OrderedDict(sorted(allactivities.items(), key=lambda t: t[0]))    
@@ -454,7 +459,7 @@ if __name__ == "__main__":
     #plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
     # The following line does automatic time range according to the life of the organization
     plt.xlim(org.created_at,lastevent[0])
-    plt.ylim(0,max_activity)
+    plt.ylim(0,max_activity2)
     
     # Save plot
     plt.savefig(directory+"/"+"complete-activity-timeline.png",dpi=200)
