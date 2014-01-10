@@ -41,7 +41,7 @@ events = {}
 if __name__ == "__main__":
     print "Simple statistics of your GitHub Organization"
     print ""
-    choice = raw_input("Do you want to mine GitHub or to load an existing .json file? (yes - no) ")
+    choice = raw_input("Do you want to mine GitHub or to load an existing .json file? (mine - load) ")
     print ""
     
     userlogin = raw_input("Login: Enter your username: ")
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     
     org = g.get_organization(org_to_mine)
     
-    if choice == "yes" or choice == "Yes" or choice == "YES":
+    if choice == "mine" or choice == "Mine" or choice == "MINE":
         # Create a directory with the name of the organization for saving analysis
         directory = org_to_mine+"-stats"
         if not os.path.exists(directory):
@@ -157,10 +157,10 @@ if __name__ == "__main__":
                 save_events[i][k]["time"] = str(save_events[i][k]["time"])
         with open(directory+"/"+"events.json", 'w') as outfile:
             json.dump(save_events, outfile)
-        # convert it back to python datetime: datetime.datetime.strptime('2013-12-17 22:14:12', '%Y-%m-%d %H:%M:%S')
     
-    elif choice == "no" or choice == "No" or choice == "NO":
+    elif choice == "load" or choice == "Load" or choice == "LOAD":
         directory = raw_input("Write the name of the directory containing the events.json file:")
+        print ""
         print "Loading file events.json"
         with open(directory+'/events.json') as data_file:    
             events = json.load(data_file)
@@ -432,7 +432,7 @@ if __name__ == "__main__":
         # fig.set_size_inches(20,10.5)
         
         # Create a directory for saving analysis of each user
-        directory2 = org_to_mine+"-stats"+"/users"
+        directory2 = directory +"/users"
         if not os.path.exists(directory2):
             os.makedirs(directory2)
         
