@@ -363,18 +363,25 @@ if __name__ == "__main__":
     
     # Get the highest level of activities, for y scale
     activities = []
+    print events
     for singleuser in events:
         days = {}
-        for j in events[singleuser]:
-            # Define activities per day
-            day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
-            if day not in days:
-                days[day] = {}
-                days[day]["activity"] = 0
-            days[day]["activity"] = days[day]["activity"] + 1
-        print singleuser," - HIGHEST DAY ACTIVITY:", max(days.iteritems(), key=operator.itemgetter(1))[1]["activity"]
-        print singleuser," - WHEN:", max(days.iteritems(), key=operator.itemgetter(1))[0]
-        activities.append(max(days.iteritems(), key=operator.itemgetter(1))[1]["activity"]) 
+        print events[singleuser]
+        if len(events[singleuser]) == 0:
+            pass
+        else:
+            for j in events[singleuser]:
+                # Define activities per day
+                day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
+                print "DAY:",day
+                if day not in days:
+                    days[day] = {}
+                    days[day]["activity"] = 0
+                days[day]["activity"] = days[day]["activity"] + 1
+            print days
+            print singleuser," - HIGHEST DAY ACTIVITY:", max(days.iteritems(), key=operator.itemgetter(1))[1]["activity"]
+            print singleuser," - WHEN:", max(days.iteritems(), key=operator.itemgetter(1))[0]
+            activities.append(max(days.iteritems(), key=operator.itemgetter(1))[1]["activity"]) 
     max_activity = max(activities)
     
     # Calculate and draw and save a plot for each user
@@ -443,15 +450,18 @@ if __name__ == "__main__":
     max_single_activities = []
     for singleuser in events:
         days = {}
-        for j in events[singleuser]:
-            # Define activities per day
-            day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
-            if day not in allactivities:
-                allactivities[day] = {}
-                allactivities[day]["activity"] = 0
-                allactivities[day]["day"] = day
-            allactivities[day]["activity"] += 1
-            max_single_activities.append(allactivities[day]["activity"])
+        if len(events[singleuser]) == 0:
+            max_single_activities = [0]
+        else:
+            for j in events[singleuser]:
+                # Define activities per day
+                day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
+                if day not in allactivities:
+                    allactivities[day] = {}
+                    allactivities[day]["activity"] = 0
+                    allactivities[day]["day"] = day
+                allactivities[day]["activity"] += 1
+                max_single_activities.append(allactivities[day]["activity"])
         max_activities.append(max(max_single_activities))
     max_activity2 = max(max_activities)
     
