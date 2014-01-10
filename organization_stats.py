@@ -38,6 +38,14 @@ import copy
 users = {}
 events = {}
 
+def autolabel(rects):
+    # attach some text labels
+    for rect in rects:
+        height = rect.get_height()
+        if height != 0:
+            ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, '%d'%int(height),
+                    ha='center', va='bottom')
+
 if __name__ == "__main__":
     print "Simple statistics of your GitHub Organization"
     print ""
@@ -206,7 +214,6 @@ if __name__ == "__main__":
             
             # Count by event types
             # List of event types: http://developer.github.com/v3/activity/events/types/          
-            # print "TYPE:",events[singleuser][j]["type"]
             tipo = events[singleuser][j]["type"]
             if tipo == "PushEvent":
                 datarepo[events[singleuser][j]["repo"]]["push"] += 1
@@ -261,13 +268,6 @@ if __name__ == "__main__":
     plt.gcf().autofmt_xdate()
     
     ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0], rects5[0]), ('Push', 'Issues', 'Fork', 'Commit Comment', 'Branch/Tag') )
-    
-    def autolabel(rects):
-        # attach some text labels
-        for rect in rects:
-            height = rect.get_height()
-            ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, '%d'%int(height),
-                    ha='center', va='bottom')
     
     autolabel(rects1)
     autolabel(rects2)
@@ -346,14 +346,6 @@ if __name__ == "__main__":
     plt.gcf().autofmt_xdate()
     
     ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0], rects5[0]), ('Push', 'Issues', 'Fork', 'Commit Comment', 'Branch/Tag') )
-    
-    def autolabel(rects):
-        # attach some text labels
-        for rect in rects:
-            height = rect.get_height()
-            if height != 0:
-                ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, '%d'%int(height),
-                        ha='center', va='bottom')
     
     autolabel(rects1)
     autolabel(rects2)
