@@ -199,6 +199,7 @@ for i in users:
 	events[i]={}
 
 errors = 0
+k = 0
 
 for currentfile in allfiles:
 	print ""
@@ -220,6 +221,7 @@ for currentfile in allfiles:
 			
 		if readingfile:
 			for line in lines:
+				k += 1
 				try:
 					data = json.loads( '['+ unicode(line, errors='replace').replace('}{', '},{')+']' )
 					for i in range(len(data)):
@@ -244,6 +246,7 @@ print ".........................................................................
 print ""
 print "Events collected..."
 print ""
+
 for i in events:
 	for k in events[i]:
 		events[i][k]["time"] = str(events[i][k]["time"])
