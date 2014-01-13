@@ -361,8 +361,6 @@ if __name__ == "__main__":
         activities_by_user[i] = data[i]["push"]+data[i]["fork"]+data[i]["issue"]+data[i]["branchtag"]+data[i]["commit"]
     activities_list = []
     for k in activities_by_user:
-        print k
-        print activities_by_user[k]
         activities_list.append(activities_by_user[k])
     max_activity = max(activities_list)
     print "max:",max_activity
@@ -620,10 +618,11 @@ if __name__ == "__main__":
     
     # Configure plot
     #ax.set_xlabel('Time')
-    #ax.set_ylabel('Users')
+    ax.set_ylabel('Users')
     # Edit the following line for hiding an axis tick
-    #plt.gca().xaxis.set_major_locator(plt.NullLocator())
-    plt.yticks(position,useraxis,rotation=-22.5)
+    plt.gca().yaxis.set_major_locator(plt.NullLocator())
+    # Edit the following line for showing the users' names
+    #plt.yticks(position,useraxis,rotation=-22.5)
     ax.set_zlim([0.5,max_activity+5])
     ax.set_zlabel('Activity')
     ax.set_title("Activity of all users")
