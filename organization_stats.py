@@ -172,11 +172,22 @@ if __name__ == "__main__":
         print "Loading file events.json"
         with open(directory+'/events.json') as data_file:    
             events = json.load(data_file)
-        lastevent = []
         for i in events:
             for k in events[i]:
                 events[i][k]["time"] = datetime.datetime.strptime(events[i][k]["time"], '%Y-%m-%d %H:%M:%S')
-                lastevent.append(events[i][k]["time"])
+                
+        # Get last event and first event
+        lastevent = org.created_at
+        firstevent = org.updated_at
+        for i in events:
+            for k in events[i]:
+                if events[i][k]["time"] < firstevent:
+                    firstevent = events[i][k]["time"]
+                else:
+                    pass
+                
+                if events[i][k]["time"] > lastevent:
+                    lastevent = events[i][k]["time"]
     
     # ................................................................................................
     # Separate activities by repository ..............................................................
@@ -427,7 +438,7 @@ if __name__ == "__main__":
         #plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
         # The following line does automatic time range according to the life of the organization
         #plt.xlim(org.created_at,lastevent[0])
-        plt.xlim(lastevent[-1],lastevent[0])
+        plt.xlim(firstevent,lastevent)
         plt.ylim(0,max_activity+5)
         
         # Set picture size
@@ -494,7 +505,7 @@ if __name__ == "__main__":
     #plt.xlim([datetime.date(2013,11,1), datetime.date(2014,1,9)])
     # The following line does automatic time range according to the life of the organization
     #plt.xlim(org.created_at,lastevent[0])
-    plt.xlim(lastevent[-1],lastevent[0])
+    plt.xlim(firstevent,lastevent)
     plt.ylim(0,max_activity2)
     
     # Save plot
