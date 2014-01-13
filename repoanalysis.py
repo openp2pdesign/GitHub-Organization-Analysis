@@ -15,27 +15,33 @@ def analyse_repo(repository,graph):
     print "-----"
     print "WATCHERS:",repository.watchers
     print ""
-    for i in repository.get_stargazers():
-        if i != None:
-            print "-",i.login
-            if i.login not in graph:
-                graph.add_node(str(unicode(i.login)),watcher="Yes")
+    try:
+        for i in repository.get_stargazers():
+            if i != None:
+                print "-",i.login
+                if i.login not in graph:
+                    graph.add_node(str(unicode(i.login)),watcher="Yes")
+                else:
+                    graph.node[i.login]["watcher"]="Yes"
             else:
-                graph.node[i.login]["watcher"]="Yes"
-        else:
-            graph.node["None"]["watcher"]="Yes"
+                graph.node["None"]["watcher"]="Yes"
+    except:
+        print "The repository has no found watchers..."
     print "-----"
     print "COLLABORATORS"
     print ""
-    for i in repository.get_collaborators():
-        if i != None:
-            print "-",i.login
-            if i.login not in graph:
-                graph.add_node(str(unicode(i.login)),collaborator="Yes")
+    try:
+        for i in repository.get_collaborators():
+            if i != None:
+                print "-",i.login
+                if i.login not in graph:
+                    graph.add_node(str(unicode(i.login)),collaborator="Yes")
+                else:
+                    graph.node[i.login]["collaborator"]="Yes"
             else:
-                graph.node[i.login]["collaborator"]="Yes"
-        else:
-            graph.node["None"]["collaborator"]="Yes"
+                graph.node["None"]["collaborator"]="Yes"
+    except:
+        print "The repository has no found collaborators..."
     print "-----"
     print "HAS ISSUES=",repository.has_issues
     if repository.has_issues == True:
@@ -105,15 +111,18 @@ def analyse_repo(repository,graph):
     print "-----"
     print "CONTRIBUTORS"
     print ""
-    for i in repository.get_contributors():
-        if i.login != None:
-            print "-", i.login
-            if i.login not in graph:
-                    graph.add_node(str(unicode(i.login)),contributor="Yes")
+    try:
+        for i in repository.get_contributors():
+            if i.login != None:
+                print "-", i.login
+                if i.login not in graph:
+                        graph.add_node(str(unicode(i.login)),contributor="Yes")
+                else:
+                    graph.node[i.login]["contributor"]="Yes"
             else:
-                graph.node[i.login]["contributor"]="Yes"
-        else:
-            graph.node["None"]["contributor"]="Yes"
+                graph.node["None"]["contributor"]="Yes"
+    except:
+        print "The repository has no found contributors..."
     print "-----"
     print "COMMITS"
     print ""
