@@ -182,10 +182,18 @@ if __name__ == "__main__":
     # Separate activities by repository ..............................................................
     # Push, Issue, IssueComment, CommitComment, Fork, Pull, Branch / Tag
     
+    repos = []
     data = {}
     datarepo = {}
-    for repo in org.get_repos():
-        fullreponame = org.login+"/"+repo.name
+    
+    for i in events:
+        for k in events[i]:
+            if events[i][k]["repo"] not in repos:
+                repos.append(events[i][k]["repo"]) 
+    
+    for repo in repos:
+        #fullreponame = org.login+"/"+repo
+        fullreponame = repo
         datarepo[fullreponame]={}
         datarepo[fullreponame]["push"] = 0
         datarepo[fullreponame]["issue"] = 0
@@ -201,7 +209,6 @@ if __name__ == "__main__":
         data[singleuser]["commit"] = 0
         data[singleuser]["branchtag"] = 0
         for j in events[singleuser]:
-            
             # In case we get a mistake in the name of the repo...
             if events[singleuser][j]["repo"] not in datarepo:
                 newrepo = events[singleuser][j]["repo"]
@@ -363,22 +370,19 @@ if __name__ == "__main__":
     
     # Get the highest level of activities, for y scale
     activities = []
-    print events
+
     for singleuser in events:
         days = {}
-        print events[singleuser]
         if len(events[singleuser]) == 0:
             pass
         else:
             for j in events[singleuser]:
                 # Define activities per day
                 day = datetime.date(events[singleuser][j]["time"].year, events[singleuser][j]["time"].month, events[singleuser][j]["time"].day)
-                print "DAY:",day
                 if day not in days:
                     days[day] = {}
                     days[day]["activity"] = 0
                 days[day]["activity"] = days[day]["activity"] + 1
-            print days
             print singleuser," - HIGHEST DAY ACTIVITY:", max(days.iteritems(), key=operator.itemgetter(1))[1]["activity"]
             print singleuser," - WHEN:", max(days.iteritems(), key=operator.itemgetter(1))[0]
             activities.append(max(days.iteritems(), key=operator.itemgetter(1))[1]["activity"]) 
@@ -424,7 +428,7 @@ if __name__ == "__main__":
         # The following line does automatic time range according to the life of the organization
         #plt.xlim(org.created_at,lastevent[0])
         plt.xlim(lastevent[-1],lastevent[0])
-        plt.ylim(0,max_activity)
+        plt.ylim(0,max_activity+5)
         
         # Set picture size
         # fig = plt.gcf()
