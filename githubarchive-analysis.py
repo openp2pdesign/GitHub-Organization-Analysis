@@ -91,42 +91,51 @@ for repo in org.get_repos():
 	print ""
 	print "WATCHERS:",repository.watchers
 	print ""
-	for i in repository.get_stargazers():
-		if i != None:
-			print "-",i.login
-			if i.login not in users:
-				users[i.login] = {}
-				users[i.login]["watcher"]="Yes"
+	try:
+		for i in repository.get_stargazers():
+			if i != None:
+				print "-",i.login
+				if i.login not in users:
+					users[i.login] = {}
+					users[i.login]["watcher"]="Yes"
+				else:
+					users[i.login]["watcher"]="Yes" 
 			else:
-				users[i.login]["watcher"]="Yes" 
-		else:
-			users["None"]["watcher"]="Yes" 
+				users["None"]["watcher"]="Yes" 
+	except:
+		print "The repository has no found watchers..."
 	print ""
 	print "COLLABORATORS"
 	print ""
-	for i in repository.get_collaborators():
-		if i != None:
-			print "-",i.login
-			if i.login not in users:
-				users[i.login] = {}
-				users[i.login]["collaborator"]="Yes"
+	try:
+		for i in repository.get_collaborators():
+			if i != None:
+				print "-",i.login
+				if i.login not in users:
+					users[i.login] = {}
+					users[i.login]["collaborator"]="Yes"
+				else:
+					users[i.login]["collaborator"]="Yes"
 			else:
-				users[i.login]["collaborator"]="Yes"
-		else:
-			users["None"]["collaborator"]="Yes"
+				users["None"]["collaborator"]="Yes"
+	except:
+		print "The repository has no found collaborators..."
 	print ""
 	print "CONTRIBUTORS"
 	print ""
-	for i in repository.get_contributors():
-		if i.login != None:
-			print "-", i.login
-			if i.login not in users:
-					users[i.login] = {}
+	try:
+		for i in repository.get_contributors():
+			if i.login != None:
+				print "-", i.login
+				if i.login not in users:
+						users[i.login] = {}
+						users[i.login]["contributor"]="Yes"
+				else:
 					users[i.login]["contributor"]="Yes"
 			else:
-				users[i.login]["contributor"]="Yes"
-		else:
-			users["None"]["contributor"]="Yes"
+				users["None"]["contributor"]="Yes"
+	except:
+		print "The repository has no found contributors..."
 			
 	# Check the attributes of every node, and add a "No" when it is not present
 	for i in users:
