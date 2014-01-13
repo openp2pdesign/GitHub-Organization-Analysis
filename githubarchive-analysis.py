@@ -208,13 +208,14 @@ for currentfile in allfiles:
 			# Debug for encoding of each line
 			#print chardet.detect(line)["encoding"]
 			line = line.replace(chr(0xa0), ' ')
+			#try:
+			#	encoding = chardet.detect(line)["encoding"]
+			#except LookupError:
+			#	encoding = "utf8"
+			#print encoding
+			#if encoding != None or encoding != "EUC-TW":
+			#	line = line.decode(encoding).encode('utf8','replace')
 			try:
-				encoding = chardet.detect(line)["encoding"]
-			except LookupError:
-				encoding = "utf8"
-			print encoding
-			if encoding != None or encoding != "EUC-TW":
-				line = line.decode(encoding).encode('utf8','replace')
 				rec = json.loads(line)
 				# Debug: print a beautified version of the line
 				#print json.dumps(rec, sort_keys=True, indent=4)
@@ -227,7 +228,7 @@ for currentfile in allfiles:
 							events[rec["actor"]][k]["time"] = time
 							events[rec["actor"]][k]["type"] = rec["type"]
 							events[rec["actor"]][k]["repo"] = rec["repository"]["name"]
-			else:
+			except:
 				print ""
 				print "There was an error decoding the event:",line
 				errors += 1
