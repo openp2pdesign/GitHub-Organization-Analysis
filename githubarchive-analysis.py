@@ -89,7 +89,7 @@ for repo in org.get_repos():
 	print "NOW ANALYSING:", repo.name
 	repository = org.get_repo(repo.name)
 
-	print "-----"
+	print ""
 	print "WATCHERS:",repository.watchers
 	print ""
 	for i in repository.get_stargazers():
@@ -102,7 +102,7 @@ for repo in org.get_repos():
 				users[i.login]["watcher"]="Yes" 
 		else:
 			users["None"]["watcher"]="Yes" 
-	print "-----"
+	print ""
 	print "COLLABORATORS"
 	print ""
 	for i in repository.get_collaborators():
@@ -115,7 +115,7 @@ for repo in org.get_repos():
 				users[i.login]["collaborator"]="Yes"
 		else:
 			users["None"]["collaborator"]="Yes"
-	print "-----"
+	print ""
 	print "CONTRIBUTORS"
 	print ""
 	for i in repository.get_contributors():
@@ -201,6 +201,7 @@ for i in users:
 errors = 0
 
 for currentfile in allfiles:
+	print ""
 	print "Loading",currentfile
 	with gzip.open(currentfile) as f:
 		lines = f.read().splitlines()
@@ -208,26 +209,31 @@ for currentfile in allfiles:
 			# Debug for encoding of each line
 			#print chardet.detect(line)["encoding"]
 			line = line.replace(chr(0xa0), ' ')
-			#try:
-			#	encoding = chardet.detect(line)["encoding"]
-			#except LookupError:
-			#	encoding = "utf8"
-			#print encoding
-			#if encoding != None or encoding != "EUC-TW":
-			#	line = line.decode(encoding).encode('utf8','replace')
 			try:
-				rec = json.loads(line)
-				# Debug: print a beautified version of the line
-				#print json.dumps(rec, sort_keys=True, indent=4)
-				if "repository" in rec:
-					if "organization" in rec["repository"]:
-						if rec["actor"] in users and rec["repository"]["organization"] == org.login:
-							print "Event found.....by",rec["actor"],"with",rec["type"],"within",rec["repository"]["name"],"at",rec["created_at"]
-							events[rec["actor"]][k] = {}
-							time = datetime.strptime(rec["created_at"][:-6], "%Y-%m-%dT%H:%M:%S")
-							events[rec["actor"]][k]["time"] = time
-							events[rec["actor"]][k]["type"] = rec["type"]
-							events[rec["actor"]][k]["repo"] = rec["repository"]["name"]
+				encoding = chardet.detect(line)["encoding"]
+				try:
+					line = line.decode(encoding).encode('utf8','replace')
+					try:
+						rec = json.loads(line)
+						# Debug: print a beautified version of the line
+						#print json.dumps(rec, sort_keys=True, indent=4)
+						if "repository" in rec:
+							if "organization" in rec["repository"]:
+								if rec["actor"] in users and rec["repository"]["organization"] == org.login:
+									print "Event found.....by",rec["actor"],"with",rec["type"],"within",rec["repository"]["name"],"at",rec["created_at"]
+									events[rec["actor"]][k] = {}
+									time = datetime.strptime(rec["created_at"][:-6], "%Y-%m-%dT%H:%M:%S")
+									events[rec["actor"]][k]["time"] = time
+									events[rec["actor"]][k]["type"] = rec["type"]
+									events[rec["actor"]][k]["repo"] = rec["repository"]["name"]
+					except:
+						print ""
+						print "There was an error decoding the event:",line
+						errors += 1
+				except:
+					print ""
+					print "There was an error decoding the event:",line
+					errors += 1
 			except:
 				print ""
 				print "There was an error decoding the event:",line
@@ -252,4 +258,4 @@ os.chdir('..')
 with open("events.json", 'w') as outfile:
 	json.dump(events, outfile)
 	
-print "Done.", errors, "conversion errors."
+print "Done.", errors, "conversion errors. Please check that they did not affect the data you were looking for."
