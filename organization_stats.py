@@ -43,7 +43,7 @@ def autolabel(rects):
     for rect in rects:
         height = rect.get_height()
         if height != 0:
-            ax.text(rect.get_x()+rect.get_width()/2., 1.03*height, '%d'%int(height),
+            ax.text(rect.get_x()+rect.get_width()/2., 2+1.0*height, '%d'%int(height),
                     ha='center', va='bottom')
 
 if __name__ == "__main__":
@@ -258,17 +258,19 @@ if __name__ == "__main__":
     # Getting maxim value for Y axis  
     activities_by_repo = {}
     for i in datarepo:
-        activities_by_repo[i] = max([datarepo[i]["push"],datarepo[i]["fork"],datarepo[i]["issue"],datarepo[i]["branchtag"],datarepo[i]["commit"]])
+        activities_by_repo[i] = datarepo[i]["push"]+datarepo[i]["fork"]+datarepo[i]["issue"]+datarepo[i]["branchtag"]+datarepo[i]["commit"]
     activities_list = []
     for k in activities_by_repo:
         activities_list.append(activities_by_repo[k])
     max_activity = max(activities_list)
     
     # Order the repos inversely
+    allrepos = []
     ordered_repos = sorted(activities_by_repo.items(), key=lambda x: x[1])
     inverse_ordered_repos = []
     for item in ordered_repos[::-1]:
         inverse_ordered_repos.append(item[0])
+        allrepos.append(item[0])
     
     # Transform the repo dictionary into lists of data
     repopushcount = []
@@ -284,7 +286,7 @@ if __name__ == "__main__":
         repobranchtagcount.append(datarepo[singlerepo]["branchtag"])
     
     N = len(datarepo)
-    allrepos = datarepo.keys()
+    
     # Remove the name of the group from the repositories' names
     remove = org.login+"/"
     for enum,h in enumerate(allrepos):
@@ -352,14 +354,34 @@ if __name__ == "__main__":
                 data[singleuser]["branchtag"] += 1
             else:
                 pass
-            
+    
+    # Getting maxim value for Y axis  
+    activities_by_user = {}
+    for i in events:
+        activities_by_user[i] = data[i]["push"]+data[i]["fork"]+data[i]["issue"]+data[i]["branchtag"]+data[i]["commit"]
+    activities_list = []
+    for k in activities_by_user:
+        print k
+        print activities_by_user[k]
+        activities_list.append(activities_by_user[k])
+    max_activity = max(activities_list)
+    print "max:",max_activity
+    
+    # Order the repos inversely
+    allusers = []
+    ordered_users = sorted(activities_by_user.items(), key=lambda x: x[1])
+    inverse_ordered_users = []
+    for item in ordered_users[::-1]:
+        inverse_ordered_users.append(item[0])
+        allusers.append(item[0])
+    
     # Transform the dictionary into lists of data
     pushcount = []
     issuecount = []
     forkcount = []
     commitcount = []
     branchtagcount = []
-    for singleuser in events:
+    for singleuser in inverse_ordered_users:
         pushcount.append(data[singleuser]["push"])
         issuecount.append(data[singleuser]["issue"])
         forkcount.append(data[singleuser]["fork"])
@@ -368,7 +390,6 @@ if __name__ == "__main__":
     
     # Example from http://matplotlib.org/examples/api/barchart_demo.html
     N = len(events)
-    allusers = events.keys()
     
     ind = np.arange(N)  # the x locations for the groups
     width = 0.15       # the width of the bars
@@ -386,6 +407,7 @@ if __name__ == "__main__":
     ax.set_title('Activity by user')
     ax.set_xticks(ind+width)
     ax.set_xticklabels(allusers)
+    plt.ylim(0,max_activity+10)
     plt.gcf().autofmt_xdate()
     
     ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0], rects5[0]), ('Push', 'Issues', 'Fork', 'Commit Comment', 'Branch/Tag') )
