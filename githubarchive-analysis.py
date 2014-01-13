@@ -23,7 +23,8 @@ import os
 import urllib
 from datetime import date, datetime
 from dateutil.rrule import rrule, DAILY, HOURLY
-import chardet
+#import chardet
+import codecs
 
 users = {}
 members = {}
@@ -203,16 +204,26 @@ errors = 0
 for currentfile in allfiles:
 	print ""
 	print "Loading",currentfile
-	with gzip.open(currentfile) as f:
-		lines = f.read().splitlines()
-		for k,line in enumerate(lines):
-			# Debug for encoding of each line
-			#print chardet.detect(line)["encoding"]
-			line = line.replace(chr(0xa0), ' ')
-			#try:
-			#	line = line.encode('utf8','replace')
-			#try:
-			rec = json.loads(line, "utf8", "replace")
+	
+	f = gzip.open(currentfile, "replace")
+	reader = codecs.getreader("utf-8")
+	data = reader(f)
+	
+	
+	#fp = gzip.open(currentfile, "replace")
+	#contents = fp.read()
+	#fp.close()
+	#data = json.loads(contents, 'utf-8')
+	
+	
+	for k,line in enumerate(data):
+		# Debug for encoding of each line
+		#print chardet.detect(line)["encoding"]
+		#line = line.replace(chr(0xa0), ' ')
+		#try:
+		#	line = line.encode('utf8','replace')
+		try:
+			rec = json.loads(line)
 			# Debug: print a beautified version of the line
 			#print json.dumps(rec, sort_keys=True, indent=4)
 			if "repository" in rec:
@@ -224,10 +235,11 @@ for currentfile in allfiles:
 						events[rec["actor"]][k]["time"] = time
 						events[rec["actor"]][k]["type"] = rec["type"]
 						events[rec["actor"]][k]["repo"] = rec["repository"]["name"]
-			#except:
-			#	print ""
-			#	print "There was an error decoding the event:",line
-			#	errors += 1
+		except:
+			print ""
+			print "There was an error decoding the event:",line
+			errors += 1
+	f.close()
 		
 				
 print ".........................................................................."
