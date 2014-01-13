@@ -363,7 +363,7 @@ if __name__ == "__main__":
     for k in activities_by_user:
         activities_list.append(activities_by_user[k])
     max_activity = max(activities_list)
-    print "max:",max_activity
+    
     
     # Order the repos inversely
     allusers = []
@@ -551,7 +551,7 @@ if __name__ == "__main__":
     # The following line does automatic time range according to the life of the organization
     #plt.xlim(org.created_at,lastevent[0])
     plt.xlim(firstevent,lastevent)
-    plt.ylim(0,max_activity2)
+    plt.ylim(0,max_activity2+5)
     
     # Save plot
     plt.savefig(directory+"/"+"complete-activity-timeline.png",dpi=200)
