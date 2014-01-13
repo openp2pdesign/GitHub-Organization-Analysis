@@ -43,7 +43,7 @@ def autolabel(rects):
     for rect in rects:
         height = rect.get_height()
         if height != 0:
-            ax.text(rect.get_x()+rect.get_width()/2., 1.02*height, '%d'%int(height),
+            ax.text(rect.get_x()+rect.get_width()/2., 1.03*height, '%d'%int(height),
                     ha='center', va='bottom')
 
 if __name__ == "__main__":
@@ -263,14 +263,20 @@ if __name__ == "__main__":
     for k in activities_by_repo:
         activities_list.append(activities_by_repo[k])
     max_activity = max(activities_list)
-            
+    
+    # Order the repos inversely
+    ordered_repos = sorted(activities_by_repo.items(), key=lambda x: x[1])
+    inverse_ordered_repos = []
+    for item in ordered_repos[::-1]:
+        inverse_ordered_repos.append(item[0])
+    
     # Transform the repo dictionary into lists of data
     repopushcount = []
     repoissuecount = []
     repoforkcount = []
     repocommitcount = []
     repobranchtagcount = []
-    for singlerepo in datarepo:
+    for singlerepo in inverse_ordered_repos:
         repopushcount.append(datarepo[singlerepo]["push"])
         repoissuecount.append(datarepo[singlerepo]["issue"])
         repoforkcount.append(datarepo[singlerepo]["fork"])
@@ -301,7 +307,7 @@ if __name__ == "__main__":
     ax.set_title('Activity by repository')
     ax.set_xticks(ind+width)
     ax.set_xticklabels(allrepos)
-    plt.ylim(0,max_activity+5)
+    plt.ylim(0,max_activity+10)
     plt.gcf().autofmt_xdate()
     
     ax.legend( (rects1[0], rects2[0], rects3[0], rects4[0], rects5[0]), ('Push', 'Issues', 'Fork', 'Commit Comment', 'Branch/Tag') )
