@@ -209,35 +209,26 @@ for currentfile in allfiles:
 			# Debug for encoding of each line
 			#print chardet.detect(line)["encoding"]
 			line = line.replace(chr(0xa0), ' ')
-			try:
-				encoding = chardet.detect(line)["encoding"]
-				try:
-					line = line.decode(encoding).encode('utf8','replace')
-					try:
-						rec = json.loads(line)
-						# Debug: print a beautified version of the line
-						#print json.dumps(rec, sort_keys=True, indent=4)
-						if "repository" in rec:
-							if "organization" in rec["repository"]:
-								if rec["actor"] in users and rec["repository"]["organization"] == org.login:
-									print "Event found.....by",rec["actor"],"with",rec["type"],"within",rec["repository"]["name"],"at",rec["created_at"]
-									events[rec["actor"]][k] = {}
-									time = datetime.strptime(rec["created_at"][:-6], "%Y-%m-%dT%H:%M:%S")
-									events[rec["actor"]][k]["time"] = time
-									events[rec["actor"]][k]["type"] = rec["type"]
-									events[rec["actor"]][k]["repo"] = rec["repository"]["name"]
-					except:
-						print ""
-						print "There was an error decoding the event:",line
-						errors += 1
-				except:
-					print ""
-					print "There was an error decoding the event:",line
-					errors += 1
-			except:
-				print ""
-				print "There was an error decoding the event:",line
-				errors += 1
+			#try:
+			#	line = line.encode('utf8','replace')
+			#try:
+			rec = json.loads(line, "utf8", "replace")
+			# Debug: print a beautified version of the line
+			#print json.dumps(rec, sort_keys=True, indent=4)
+			if "repository" in rec:
+				if "organization" in rec["repository"]:
+					if rec["actor"] in users and rec["repository"]["organization"] == org.login:
+						print "Event found.....by",rec["actor"],"with",rec["type"],"within",rec["repository"]["name"],"at",rec["created_at"]
+						events[rec["actor"]][k] = {}
+						time = datetime.strptime(rec["created_at"][:-6], "%Y-%m-%dT%H:%M:%S")
+						events[rec["actor"]][k]["time"] = time
+						events[rec["actor"]][k]["type"] = rec["type"]
+						events[rec["actor"]][k]["repo"] = rec["repository"]["name"]
+			#except:
+			#	print ""
+			#	print "There was an error decoding the event:",line
+			#	errors += 1
+		
 				
 print ".........................................................................."
 print ""
