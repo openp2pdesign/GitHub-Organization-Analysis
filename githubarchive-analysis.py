@@ -8,7 +8,6 @@
 #
 # Requisite: 
 # install pyGithub with pip install PyGithub
-# install Chardet with pip install chardet
 #
 # PyGitHub documentation can be found here: 
 # https://github.com/jacquev6/PyGithub
@@ -23,9 +22,7 @@ import os
 import urllib
 from datetime import date, datetime
 from dateutil.rrule import rrule, DAILY, HOURLY
-#import chardet
 import codecs
-import ijson
 
 users = {}
 members = {}
@@ -206,39 +203,42 @@ errors = 0
 for currentfile in allfiles:
 	print ""
 	print "Loading",currentfile
+	readingfile = True
 	
-	# OK
-	#f = gzip.open(currentfile)
-	#reader = codecs.getreader("utf-8")
-	#data = reader(f)
-	
-	
-	#fp = gzip.open(currentfile)
-	#contents = fp.read()
-	#fp.close()
-	#data = json.loads(contents, 'utf-8')
+	# Many thanks to John Rees for the data reading code! 
+	# https://github.com/johnrees
 	
 	with gzip.open(currentfile) as f:
 		try:
 	  		lines = f.read().splitlines()
-			for line in lines:
-				data = json.loads( '['+ unicode(line, errors='replace').replace('}{', '},{')+']' )
-				for i in range(len(data)):
-				  rec = data[i]
-			  
-				  if "repository" in rec:
-					if "organization" in rec["repository"]:
-						if rec["actor"] in users and rec["repository"]["organization"] == org.login:
-							print "Event found.....by",rec["actor"],"with",rec["type"],"within",rec["repository"]["name"],"at",rec["created_at"]
-							events[rec["actor"]][k] = {}
-							time = datetime.strptime(rec["created_at"][:-6], "%Y-%m-%dT%H:%M:%S")
-							events[rec["actor"]][k]["time"] = time
-							events[rec["actor"]][k]["type"] = rec["type"]
-							events[rec["actor"]][k]["repo"] = rec["repository"]["name"]
-		except:
+	  	except Exception, ex:
 			print ""
-			print "There was an error decoding the event:",line
+			print "Error:",ex
+			print "There was an error reading the file:",currentfile
 			errors += 1
+			readingfile = False
+			
+		if readingfile:
+			for line in lines:
+				try:
+					data = json.loads( '['+ unicode(line, errors='replace').replace('}{', '},{')+']' )
+					for i in range(len(data)):
+					  rec = data[i]
+			  
+					  if "repository" in rec:
+						if "organization" in rec["repository"]:
+							if rec["actor"] in users and rec["repository"]["organization"] == org.login:
+								print "Event found.....by",rec["actor"],"with",rec["type"],"within",rec["repository"]["name"],"at",rec["created_at"]
+								events[rec["actor"]][k] = {}
+								time = datetime.strptime(rec["created_at"][:-6], "%Y-%m-%dT%H:%M:%S")
+								events[rec["actor"]][k]["time"] = time
+								events[rec["actor"]][k]["type"] = rec["type"]
+								events[rec["actor"]][k]["repo"] = rec["repository"]["name"]
+				except Exception, e:
+					print ""
+					print "Error:",e
+					print "There was an error decoding the event:",line
+					errors += 1
 				
 print ".........................................................................."
 print ""
